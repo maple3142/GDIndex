@@ -66,7 +66,7 @@ export default {
 	},
 	methods: {
 		changeDrive(drive) {
-			if (drive === this.currentDrive.id) return
+			if (drive === this.currentDrive.value) return
 			if (drive !== window.props.defaultRootId) {
 				this.$router.push({ path: '/', query: { rootId: drive } })
 			} else {

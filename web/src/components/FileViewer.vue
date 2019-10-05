@@ -164,18 +164,26 @@ export default {
 	},
 	methods: {
 		goPath(path, opener) {
-			path = path
-				.split('/')
-				.map(decodeURIComponent)
-				.join('/')
 			const query = {
 				rootId: this.$route.query.rootId
 			}
 			if (opener) {
 				query.opener = opener
 			}
+			console.log(
+				'go',
+				path
+					.split('/')
+					.map(encodeURIComponent)
+					.join('/')
+			)
 			this.$router.push({
-				path,
+				path: path
+					.split('/')
+					.map(decodeURIComponent)
+					.map(encodeURIComponent)
+					.map(encodeURIComponent)
+					.join('/'),
 				query
 			})
 		},
@@ -226,14 +234,11 @@ export default {
 			this.loading = false
 		},
 		handlePath(path, query) {
-			path = path
-				.split('/')
-				.map(encodeURIComponent)
-				.join('/')
 			if (path.substr(-1) === '/') {
 				this.renderPath(path, query.rootId)
 				return true
 			} else {
+				console.log(path)
 				let u = nodeUrl.resolve(window.props.api, path)
 				//if (Math.random() < 10) return
 				if (
@@ -259,9 +264,10 @@ export default {
 
 						return
 					}
+					console.log(u)
 					this.$router.push({
 						path: '/~' + query.opener,
-						query: { url: u }
+						query: { urlBase64: btoa(u) }
 					})
 				} else {
 					location.href = u
@@ -273,7 +279,12 @@ export default {
 		this.handlePath(this.path, this.$route.query)
 	},
 	beforeRouteUpdate(to, from, next) {
-		if (this.handlePath('/' + to.params.path, to.query)) {
+		const fullyEncoded = to.params.path
+			.split('/')
+			.map(decodeURIComponent)
+			.map(encodeURIComponent)
+			.join('/') // because vue-router's encoding is a little bit weird...
+		if (this.handlePath('/' + fullyEncoded, to.query)) {
 			next()
 		}
 	}

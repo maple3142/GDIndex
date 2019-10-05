@@ -46,7 +46,7 @@ const srt2vtt = s =>
 export default {
 	async mounted() {
 		const { video, source, track } = this.$refs
-		const url = new URL(this.$route.query.url)
+		const url = new URL(atob(this.$route.query.urlBase64))
 		const toks = url.pathname.split('.')
 		const pathSansExt = toks.slice(0, -1).join('.')
 		const ext = toks.slice(-1)[0].toLowerCase()

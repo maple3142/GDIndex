@@ -12,11 +12,12 @@ import html from 'raw-loader!../assets/epub-reader.html'
 
 export default {
 	mounted() {
-		const url = this.$route.query.url
+		const url = atob(this.$route.query.urlBase64)
 		const iframe = this.$refs.container
 		iframe.srcdoc = html
 		iframe.onload = () => {
 			iframe.contentWindow.reader = iframe.contentWindow.ePubReader(url)
+			iframe.contentWindow.history.pushState = () => {}
 			iframe.focus()
 		}
 	}
