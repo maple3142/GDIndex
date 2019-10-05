@@ -164,6 +164,10 @@ export default {
 	},
 	methods: {
 		goPath(path, opener) {
+			path = path
+				.split('/')
+				.map(decodeURIComponent)
+				.join('/')
 			const query = {
 				rootId: this.$route.query.rootId
 			}
@@ -171,10 +175,7 @@ export default {
 				query.opener = opener
 			}
 			this.$router.push({
-				path: path
-					.split('/')
-					.map(encodeURIComponent)
-					.join('/'),
+				path,
 				query
 			})
 		},
