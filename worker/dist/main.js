@@ -61,8 +61,8 @@ self.props = {
 })([
 	function(e, t, s) {
 		const n = new (s(1))(self.props),
-			r = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${props.title}</title><link href="/~_~_gdindex.css" rel=stylesheet></head><body><script>window.props = { title: '${props.title}', defaultRootId: '${props.defaultRootId}' }<\/script><div id=app></div><script src="/~_~_gdindex.js"><\/script></body></html>`
-		async function o(e) {
+			r = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${props.title}</title><link href="https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/css/app.css" rel=stylesheet></head><body><script>window.props = { title: '${props.title}', defaultRootId: '${props.defaultRootId}' }<\/script><div id=app></div><script src="https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/js/app.js"><\/script></body></html>`
+		async function a(e) {
 			let t
 			t =
 				'GET' === (e = Object.assign({}, e, new URL(e.url))).method
@@ -84,6 +84,10 @@ self.props = {
 								)
 								return new Response(e.body, { headers: { 'Content-Type': 'text/css; charset=utf-8' } })
 							}
+							if ('/~_~_gdindex/drives' === t)
+								return new Response(JSON.stringify(await n.listDrive()), {
+									headers: { 'Content-Type': 'application/json' }
+								})
 							if ('/' === t.substr(-1))
 								return new Response(r, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
 							{
@@ -103,10 +107,6 @@ self.props = {
 							let { pathname: t } = e
 							t = decodeURIComponent(t)
 							const s = e.searchParams.get('rootId') || self.props.defaultRootId
-							if ('/~_~_gdindex/drives' === t)
-								return new Response(JSON.stringify(await n.listDrive()), {
-									headers: { 'Content-Type': 'application/json' }
-								})
 							if ('/' === t.substr(-1))
 								return new Response(JSON.stringify(await n.listFolderByPath(t, s)), {
 									headers: { 'Content-Type': 'application/json' }
@@ -134,7 +134,7 @@ self.props = {
 		}
 		addEventListener('fetch', e => {
 			e.respondWith(
-				o(e.request).catch(e => {
+				a(e.request).catch(e => {
 					console.error(e),
 						new Response(JSON.stringify(e.stack), {
 							status: 500,
@@ -244,10 +244,10 @@ self.props = {
 		}
 	},
 	function(e, t, s) {
-		var n, r, o
+		var n, r, a
 		;(r = []),
 			void 0 ===
-				(o =
+				(a =
 					'function' ==
 					typeof (n = () => {
 						const e = ['get', 'post', 'put', 'patch', 'delete', 'head']
@@ -263,9 +263,9 @@ self.props = {
 							}
 						const { assign: n } = Object,
 							r = e => e.reduce((e, [t, s]) => ((e[t] = s), e), {}),
-							o = (...e) => t => e.some(e => ('string' == typeof e ? typeof t === e : t instanceof e)),
-							i = o('string'),
-							a = o('object'),
+							a = (...e) => t => e.some(e => ('string' == typeof e ? typeof t === e : t instanceof e)),
+							o = a('string'),
+							i = a('object'),
 							l = e => {
 								if (!e.ok) throw new t(e)
 								return e
@@ -277,17 +277,17 @@ self.props = {
 										p = new t.URL(e, t.baseURI || void 0)
 									if (
 										(t.headers
-											? o(t.Headers)(t.headers) && (t.headers = r([...t.headers.entries()]))
+											? a(t.Headers)(t.headers) && (t.headers = r([...t.headers.entries()]))
 											: (t.headers = {}),
 										t.json)
 									)
 										(t.body = JSON.stringify(t.json)),
 											(t.headers['Content-Type'] = 'application/json')
-									else if ((e => i(e) || a(e))(t.urlencoded))
-										(t.body = i(t.urlencoded) ? t.urlencoded : d(t.urlencoded)),
+									else if ((e => o(e) || i(e))(t.urlencoded))
+										(t.body = o(t.urlencoded) ? t.urlencoded : d(t.urlencoded)),
 											(t.headers['Content-Type'] = 'application/x-www-form-urlencoded')
-									else if (o(t.FormData, 'object')(t.formData)) {
-										if (!o(t.FormData)(t.formData)) {
+									else if (a(t.FormData, 'object')(t.formData)) {
+										if (!a(t.FormData)(t.formData)) {
 											const e = new t.FormData()
 											for (const [s, n] of Object.entries(t.formData)) e.append(s, n)
 											t.formData = e
@@ -296,7 +296,7 @@ self.props = {
 									}
 									return (
 										t.qs &&
-											(i(t.qs) &&
+											(o(t.qs) &&
 												(t.qs = (e => r([...new t.URLSearchParams(e).entries()]))(t.qs)),
 											(p.search = d(n(r([...p.searchParams.entries()]), t.qs)))),
 										s.resolve(t.fetch(p, t).then(l))
@@ -319,6 +319,6 @@ self.props = {
 							: d()
 					})
 						? n.apply(t, r)
-						: n) || (e.exports = o)
+						: n) || (e.exports = a)
 	}
 ])

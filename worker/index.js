@@ -10,7 +10,7 @@ const GoogleDrive = require('./googleDrive')
 
 const gd = new GoogleDrive(self.props)
 
-const HTML = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${props.title}</title><link href="/~_~_gdindex.css" rel=stylesheet></head><body><script>window.props = { title: '${props.title}', defaultRootId: '${props.defaultRootId}' }</script><div id=app></div><script src="/~_~_gdindex.js"></script></body></html>`
+const HTML = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${props.title}</title><link href="https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/css/app.css" rel=stylesheet></head><body><script>window.props = { title: '${props.title}', defaultRootId: '${props.defaultRootId}' }<\/script><div id=app></div><script src="https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/js/app.js"><\/script></body></html>`
 
 async function onGet(request) {
 	let { pathname: path } = request
@@ -28,6 +28,12 @@ async function onGet(request) {
 		return new Response(r.body, {
 			headers: {
 				'Content-Type': 'text/css; charset=utf-8'
+			}
+		})
+	} else if (path === '/~_~_gdindex/drives') {
+		return new Response(JSON.stringify(await gd.listDrive()), {
+			headers: {
+				'Content-Type': 'application/json'
 			}
 		})
 	} else if (path.substr(-1) === '/') {
@@ -58,13 +64,7 @@ async function onPost(request) {
 	let { pathname: path } = request
 	path = decodeURIComponent(path)
 	const rootId = request.searchParams.get('rootId') || self.props.defaultRootId
-	if (path === '/~_~_gdindex/drives') {
-		return new Response(JSON.stringify(await gd.listDrive()), {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		})
-	} else if (path.substr(-1) === '/') {
+	if (path.substr(-1) === '/') {
 		return new Response(JSON.stringify(await gd.listFolderByPath(path, rootId)), {
 			headers: {
 				'Content-Type': 'application/json'
