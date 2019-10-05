@@ -5,7 +5,6 @@ self.props = {
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
 	refresh_token: ''
 }
-
 !(function(e) {
 	var t = {}
 	function s(n) {
@@ -61,47 +60,77 @@ self.props = {
 		s((s.s = 0))
 })([
 	function(e, t, s) {
-		const n = new (s(1))(self.props)
-		props.title, props.title, props.defaultRootId
-		async function r(e) {
-			let { pathname: t } = e
-			t = decodeURIComponent(t)
-			const s = e.searchParams.get('rootId') || self.props.defaultRootId
-			if ('/~_~_gdindex/drives' === t)
-				return new Response(JSON.stringify(await n.listDrive()), {
-					headers: { 'Content-Type': 'application/json' }
-				})
-			if ('/' === t.substr(-1))
-				return new Response(JSON.stringify(await n.listFolderByPath(t, s)), {
-					headers: { 'Content-Type': 'application/json' }
-				})
-			{
-				const r = await n.getMetaByPath(t, s)
-				return r
-					? r.mimeType.includes('vnd.google-apps')
-						? Response.redirect(r.webViewLink, 302)
-						: n.download(r.id, e.headers.get('Range'))
-					: new Response('null', { headers: { 'Content-Type': 'application/json' }, status: 404 })
-			}
+		const n = new (s(1))(self.props),
+			r = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${props.title}</title><link href="/~_~_gdindex.css" rel=stylesheet></head><body><script>window.props = { title: '${props.title}', defaultRootId: '${props.defaultRootId}' }<\/script><div id=app></div><script src="/~_~_gdindex.js"><\/script></body></html>`
+		async function o(e) {
+			let t
+			t =
+				'GET' === (e = Object.assign({}, e, new URL(e.url))).method
+					? await (async function(e) {
+							let { pathname: t } = e
+							t = decodeURIComponent(t)
+							const s = e.searchParams.get('rootId') || self.props.defaultRootId
+							if ('/~_~_gdindex.js' === t)
+								return fetch(
+									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.js',
+									{ headers: { 'Content-Type': 'text/javascript; charset=utf-8' } }
+								)
+							if ('/~_~_gdindex.css' === t)
+								return fetch(
+									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/css/app.css',
+									{ headers: { 'Content-Type': 'text/css; charset=utf-8' } }
+								)
+							if ('/' === t.substr(-1))
+								return new Response(r, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
+							{
+								const r = await n.getMetaByPath(t, s)
+								return r
+									? r.mimeType.includes('vnd.google-apps')
+										? Response.redirect(r.webViewLink, 302)
+										: n.download(r.id, e.headers.get('Range'))
+									: new Response('null', {
+											headers: { 'Content-Type': 'application/json' },
+											status: 404
+									  })
+							}
+					  })(e)
+					: 'POST' === e.method
+					? await (async function(e) {
+							let { pathname: t } = e
+							t = decodeURIComponent(t)
+							const s = e.searchParams.get('rootId') || self.props.defaultRootId
+							if ('/~_~_gdindex/drives' === t)
+								return new Response(JSON.stringify(await n.listDrive()), {
+									headers: { 'Content-Type': 'application/json' }
+								})
+							if ('/' === t.substr(-1))
+								return new Response(JSON.stringify(await n.listFolderByPath(t, s)), {
+									headers: { 'Content-Type': 'application/json' }
+								})
+							{
+								const r = await n.getMetaByPath(t, s)
+								return r
+									? r.mimeType.includes('vnd.google-apps')
+										? Response.redirect(r.webViewLink, 302)
+										: n.download(r.id, e.headers.get('Range'))
+									: new Response('null', {
+											headers: { 'Content-Type': 'application/json' },
+											status: 404
+									  })
+							}
+					  })(e)
+					: new Response('', { status: 405 })
+			const s = Object.create(null)
+			for (const [e, n] of t.headers.entries()) s[e] = n
+			return new Response(t.body, {
+				status: t.status,
+				statusText: t.statusText,
+				headers: Object.assign(s, { 'Access-Control-Allow-Origin': '*' })
+			})
 		}
 		addEventListener('fetch', e => {
 			e.respondWith(
-				(async function(e) {
-					let t
-					t =
-						'GET' === (e = Object.assign({}, e, new URL(e.url))).method
-							? await r(e)
-							: 'POST' === e.method
-							? await r(e)
-							: new Response('', { status: 405 })
-					const s = Object.create(null)
-					for (const [e, n] of t.headers.entries()) s[e] = n
-					return new Response(t.body, {
-						status: t.status,
-						statusText: t.statusText,
-						headers: Object.assign(s, { 'Access-Control-Allow-Origin': '*' })
-					})
-				})(e.request).catch(e => {
+				o(e.request).catch(e => {
 					console.error(e),
 						new Response(JSON.stringify(e.stack), {
 							status: 500,
@@ -237,11 +266,11 @@ self.props = {
 								if (!e.ok) throw new t(e)
 								return e
 							},
-							c = (d = {}) => {
-								const u = (e, t = {}) => {
-									n(t, d)
-									const c = e => new t.URLSearchParams(e).toString(),
-										u = new t.URL(e, t.baseURI || void 0)
+							d = (c = {}) => {
+								const p = (e, t = {}) => {
+									n(t, c)
+									const d = e => new t.URLSearchParams(e).toString(),
+										p = new t.URL(e, t.baseURI || void 0)
 									if (
 										(t.headers
 											? o(t.Headers)(t.headers) && (t.headers = r([...t.headers.entries()]))
@@ -251,7 +280,7 @@ self.props = {
 										(t.body = JSON.stringify(t.json)),
 											(t.headers['Content-Type'] = 'application/json')
 									else if ((e => i(e) || a(e))(t.urlencoded))
-										(t.body = i(t.urlencoded) ? t.urlencoded : c(t.urlencoded)),
+										(t.body = i(t.urlencoded) ? t.urlencoded : d(t.urlencoded)),
 											(t.headers['Content-Type'] = 'application/x-www-form-urlencoded')
 									else if (o(t.FormData, 'object')(t.formData)) {
 										if (!o(t.FormData)(t.formData)) {
@@ -265,25 +294,25 @@ self.props = {
 										t.qs &&
 											(i(t.qs) &&
 												(t.qs = (e => r([...new t.URLSearchParams(e).entries()]))(t.qs)),
-											(u.search = c(n(r([...u.searchParams.entries()]), t.qs)))),
-										s.resolve(t.fetch(u, t).then(l))
+											(p.search = d(n(r([...p.searchParams.entries()]), t.qs)))),
+										s.resolve(t.fetch(p, t).then(l))
 									)
 								}
-								for (const t of e) u[t] = (e, s = {}) => ((s.method = t.toUpperCase()), u(e, s))
-								return (u.extend = e => c(n({}, d, e))), (u.HTTPError = t), u
+								for (const t of e) p[t] = (e, s = {}) => ((s.method = t.toUpperCase()), p(e, s))
+								return (p.extend = e => d(n({}, c, e))), (p.HTTPError = t), p
 							},
-							d = 'undefined' != typeof document
+							c = 'undefined' != typeof document
 						return 'undefined' != typeof self
-							? c({
+							? d({
 									fetch: fetch.bind(self),
 									URL: URL,
 									Response: Response,
 									URLSearchParams: URLSearchParams,
 									Headers: Headers,
 									FormData: FormData,
-									baseURI: d ? document.baseURI : ''
+									baseURI: c ? document.baseURI : ''
 							  })
-							: c()
+							: d()
 					})
 						? n.apply(t, r)
 						: n) || (e.exports = o)

@@ -90,7 +90,7 @@ async function onPost(request) {
 async function handleRequest(request) {
 	request = Object.assign({}, request, new URL(request.url))
 	let resp
-	if (request.method === 'GET') resp = await onPost(request)
+	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)
 	else
 		resp = new Response('', {
