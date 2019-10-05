@@ -1,16 +1,8 @@
 /*
- * XFetch.js
+ * XFetch.js modified
  * A extremely simple fetch extension inspired by sindresorhus/ky.
  */
-;((root, fn) => {
-	if (typeof define === 'function' && define.amd) {
-		define([], fn)
-	} else if (typeof exports === 'object') {
-		module.exports = fn()
-	} else {
-		root.xf = fn()
-	}
-})(this, () => {
+const xf = (() => {
 	const METHODS = ['get', 'post', 'put', 'patch', 'delete', 'head']
 	class HTTPError extends Error {
 		constructor(res) {
@@ -98,4 +90,5 @@
 				baseURI: isWindow ? document.baseURI : '' // since there is no document in webworkers
 		  })
 		: extend()
-})
+})()
+export default xf

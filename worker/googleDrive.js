@@ -1,4 +1,4 @@
-const xf = require('./xfetch')
+import xf from './xfetch'
 
 class GoogleDrive {
 	constructor(auth) {
@@ -119,4 +119,4 @@ class GoogleDrive {
 		return resp.files[0].id
 	}
 }
-module.exports = GoogleDrive
+export default GoogleDrive
