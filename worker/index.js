@@ -73,8 +73,33 @@ async function onPost(request) {
 		}
 	}
 }
-
+function unauthorized() {
+	return new Response('Unauthorized', {
+		headers: {
+			'WWW-Authenticate': 'Basic realm="goindex"'
+		},
+		status: 401
+	})
+}
+function parseBasicAuth(auth) {
+	try {
+		return atob(auth.split(' ').pop()).split(':')
+	} catch (e) {
+		return []
+	}
+}
+function doBasicAuth(request) {
+	const auth = request.headers.get('Authorization')
+	if (!auth || !/^Basic [A-Za-z0-9._~+/-]+=*$/i.test(auth)) {
+		return false
+	}
+	const [user, pass] = parseBasicAuth(auth)
+	return user === self.props.user && pass === self.props.pass
+}
 async function handleRequest(request) {
+	if (self.props.enable_basic_auth && !doBasicAuth(request)) {
+		return unauthorized()
+	}
 	request = Object.assign({}, request, new URL(request.url))
 	request.pathname = request.pathname
 		.split('/')

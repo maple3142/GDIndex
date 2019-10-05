@@ -3,7 +3,10 @@ self.props = {
 	defaultRootId: 'root',
 	client_id: '202264815644.apps.googleusercontent.com',
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
-	refresh_token: ''
+	refresh_token: '',
+	enable_basic_auth: false,
+	user: '',
+	pass: ''
 };
 (function () {
   'use strict';
@@ -1005,6 +1008,10 @@ self.props = {
   }
 
   var handleRequest = _async(function (request) {
+    if (self.props.enable_basic_auth && !doBasicAuth(request)) {
+      return unauthorized();
+    }
+
     request = Object.assign({}, request, new URL(request.url));
     request.pathname = request.pathname.split('/').map(decodeURIComponent).map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
     .join('/');
@@ -1178,6 +1185,39 @@ self.props = {
   }
 
   var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"/~_~_gdindex/resources/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "', api: location.protocol + '//' + location.host }</script><div id=app></div><script src=\"/~_~_gdindex/resources/js/app.js\"></script></body></html>");
+
+  function unauthorized() {
+    return new Response('Unauthorized', {
+      headers: {
+        'WWW-Authenticate': 'Basic realm="goindex"'
+      },
+      status: 401
+    });
+  }
+
+  function parseBasicAuth(auth) {
+    try {
+      return atob(auth.split(' ').pop()).split(':');
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function doBasicAuth(request) {
+    var auth = request.headers.get('Authorization');
+
+    if (!auth || !/^Basic [A-Za-z0-9._~+/-]+=*$/i.test(auth)) {
+      return false;
+    }
+
+    var _parseBasicAuth = parseBasicAuth(auth),
+        _parseBasicAuth2 = _slicedToArray(_parseBasicAuth, 2),
+        user = _parseBasicAuth2[0],
+        pass = _parseBasicAuth2[1];
+
+    return user === self.props.user && pass === self.props.pass;
+  }
+
   addEventListener('fetch', function (event) {
     event.respondWith(handleRequest(event.request)["catch"](function (err) {
       console.error(err);
