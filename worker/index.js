@@ -79,6 +79,7 @@ async function handleRequest(request) {
 	request.pathname = request.pathname
 		.split('/')
 		.map(decodeURIComponent)
+		.map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
 		.join('/')
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
