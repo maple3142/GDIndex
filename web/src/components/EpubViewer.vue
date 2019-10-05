@@ -1,13 +1,18 @@
 <template>
-	<iframe ref="container"></iframe>
+	<v-container fluid fill-height>
+		<v-layout row wrap>
+			<v-flex d-flex>
+				<iframe ref="container"></iframe>
+			</v-flex>
+		</v-layout>
+	</v-container>
 </template>
 <script>
 import html from 'raw-loader!../assets/epub-reader.html'
-import nodeUrl from 'url'
 
 export default {
 	mounted() {
-		const url = nodeUrl.resolve(window.props.api, this.$route.query.path)
+		const url = this.$route.query.url
 		const iframe = this.$refs.container
 		iframe.srcdoc = html
 		iframe.onload = () => {

@@ -3,7 +3,7 @@
 		<v-app-bar app color="primary" dark>
 			<v-toolbar-title class="headline pointer">
 				<router-link
-					:to="{ path: '/', query: $route.query }"
+					:to="{ path: '/', query: { rootId: $route.query.rootId } }"
 					tag="span"
 					>{{ title }}</router-link
 				>

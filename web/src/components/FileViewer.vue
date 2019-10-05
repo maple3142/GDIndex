@@ -53,7 +53,8 @@ import nodeUrl from 'url'
 import api from '../api'
 
 const SUPPORTED_TYPES = {
-	'application/epub+zip': 'epubviewer'
+	'application/epub+zip': 'epubviewer',
+	'video/mp4': 'videoviewer'
 }
 export default {
 	data() {
@@ -125,30 +126,34 @@ export default {
 				})
 			}
 		},
-		handlePath(path, rootId) {
+		handlePath(path, query) {
 			if (path.substr(-1) === '/') {
-				this.renderPath(path, rootId)
+				this.renderPath(path, query.rootId)
 				return true
 			} else {
 				let u = nodeUrl.resolve(window.props.api, path)
-				if (rootId && rootId !== window.props.defaultRootId) {
-					u += '?rootId=' + rootId
+				if (
+					query.rootId &&
+					query.rootId !== window.props.defaultRootId
+				) {
+					u += '?rootId=' + query.rootId
 				}
-				location.href = u
+				if (query.opener) {
+					this.$router.push({
+						path: '/~' + query.opener,
+						query: { url: u }
+					})
+				} else {
+					location.href = u
+				}
 			}
 		}
 	},
 	created() {
-		this.handlePath(this.path, this.$route.query.rootId)
+		this.handlePath(this.path, this.$route.query)
 	},
 	beforeRouteUpdate(to, from, next) {
-		const destPath = '/' + to.params.path
-		if (to.query.opener) {
-			next({
-				path: '/~' + to.query.opener,
-				query: { path: destPath }
-			})
-		} else if (this.handlePath(destPath, to.query.rootId)) {
+		if (this.handlePath('/' + to.params.path, to.query)) {
 			next()
 		}
 	}
