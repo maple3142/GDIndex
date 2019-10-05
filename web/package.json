@@ -9,6 +9,8 @@
 	"dependencies": {
 		"core-js": "^2.6.5",
 		"date-fns": "^2.4.1",
+		"inline-resource": "^0.1.7",
+		"inliner": "^1.13.1",
 		"pretty-bytes": "^5.3.0",
 		"vue": "^2.6.10",
 		"vue-i18n": "^8.0.0",
@@ -28,6 +30,7 @@
 		"eslint-plugin-vue": "^5.0.0",
 		"material-design-icons-iconfont": "^5.0.1",
 		"prettier": "^1.18.2",
+		"raw-loader": "^3.1.0",
 		"sass": "^1.17.4",
 		"sass-loader": "^7.1.0",
 		"vue-cli-plugin-i18n": "^0.6.0",

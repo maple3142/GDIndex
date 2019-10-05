@@ -23,7 +23,10 @@
 						<router-link
 							:to="{
 								path: row.item.resourcePath,
-								query: $route.query
+								query: {
+									rootId: $route.query.rootId,
+									opener: row.item.opener
+								}
 							}"
 							class="fake-tr"
 						>
@@ -49,6 +52,9 @@ import prettyBytes from 'pretty-bytes'
 import nodeUrl from 'url'
 import api from '../api'
 
+const SUPPORTED_TYPES = {
+	'application/epub+zip': 'epubviewer'
+}
 export default {
 	data() {
 		return {
@@ -95,7 +101,9 @@ export default {
 			this.list = files.map(f => {
 				const isFolder =
 					f.mimeType === 'application/vnd.google-apps.folder'
-				return {
+				const resourcePath =
+					nodeUrl.resolve(path, f.name) + (isFolder ? '/' : '')
+				const o = {
 					fileName: f.name,
 					modifiedTime: format(
 						new Date(f.modifiedTime),
@@ -103,9 +111,12 @@ export default {
 					),
 					mimeType: f.mimeType,
 					fileSize: f.size ? prettyBytes(parseInt(f.size)) : '',
-					resourcePath:
-						nodeUrl.resolve(path, f.name) + (isFolder ? '/' : '')
+					resourcePath
 				}
+				if (f.mimeType in SUPPORTED_TYPES) {
+					o.opener = SUPPORTED_TYPES[f.mimeType]
+				}
+				return o
 			})
 			if (path !== '/') {
 				this.list.unshift({
@@ -131,7 +142,13 @@ export default {
 		this.handlePath(this.path, this.$route.query.rootId)
 	},
 	beforeRouteUpdate(to, from, next) {
-		if (this.handlePath('/' + to.params.path, to.query.rootId)) {
+		const destPath = '/' + to.params.path
+		if (to.query.opener) {
+			next({
+				path: '/~' + to.query.opener,
+				query: { path: destPath }
+			})
+		} else if (this.handlePath(destPath, to.query.rootId)) {
 			next()
 		}
 	}
