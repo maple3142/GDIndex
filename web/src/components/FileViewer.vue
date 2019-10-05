@@ -170,13 +170,6 @@ export default {
 			if (opener) {
 				query.opener = opener
 			}
-			console.log(
-				'go',
-				path
-					.split('/')
-					.map(encodeURIComponent)
-					.join('/')
-			)
 			this.$router.push({
 				path: path
 					.split('/')
@@ -238,7 +231,6 @@ export default {
 				this.renderPath(path, query.rootId)
 				return true
 			} else {
-				console.log(path)
 				let u = nodeUrl.resolve(window.props.api, path)
 				//if (Math.random() < 10) return
 				if (
@@ -264,7 +256,6 @@ export default {
 
 						return
 					}
-					console.log(u)
 					this.$router.push({
 						path: '/~' + query.opener,
 						query: { urlBase64: btoa(u) }
