@@ -17,13 +17,15 @@ async function onGet(request) {
 	path = decodeURIComponent(path)
 	const rootId = request.searchParams.get('rootId') || self.props.defaultRootId
 	if (path === '/~_~_gdindex.js') {
-		return fetch('https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.js', {
+		const r = await fetch('https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.js')
+		return new Response(r.body, {
 			headers: {
 				'Content-Type': 'text/javascript; charset=utf-8'
 			}
 		})
 	} else if (path === '/~_~_gdindex.css') {
-		return fetch('https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/css/app.css', {
+		const r = await fetch('https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.css')
+		return new Response(r.body, {
 			headers: {
 				'Content-Type': 'text/css; charset=utf-8'
 			}

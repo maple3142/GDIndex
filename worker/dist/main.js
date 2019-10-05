@@ -70,16 +70,20 @@ self.props = {
 							let { pathname: t } = e
 							t = decodeURIComponent(t)
 							const s = e.searchParams.get('rootId') || self.props.defaultRootId
-							if ('/~_~_gdindex.js' === t)
-								return fetch(
-									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.js',
-									{ headers: { 'Content-Type': 'text/javascript; charset=utf-8' } }
+							if ('/~_~_gdindex.js' === t) {
+								const e = await fetch(
+									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.js'
 								)
-							if ('/~_~_gdindex.css' === t)
-								return fetch(
-									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/css/app.css',
-									{ headers: { 'Content-Type': 'text/css; charset=utf-8' } }
+								return new Response(e.body, {
+									headers: { 'Content-Type': 'text/javascript; charset=utf-8' }
+								})
+							}
+							if ('/~_~_gdindex.css' === t) {
+								const e = await fetch(
+									'https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/js/app.css'
 								)
+								return new Response(e.body, { headers: { 'Content-Type': 'text/css; charset=utf-8' } })
+							}
 							if ('/' === t.substr(-1))
 								return new Response(r, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
 							{
