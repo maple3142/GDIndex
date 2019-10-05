@@ -1060,7 +1060,7 @@ self.props = {
     return then(result);
   }
 
-  var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "' }</script><div id=app></div><script src=\"https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/js/app.js\"></script></body></html>");
+  var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "', api: location.protocol + '//' + location.host }</script><div id=app></div><script src=\"https://gh.maple3142.net/maple3142/GDIndex/master/web/dist/js/app.js\"></script></body></html>");
   addEventListener('fetch', function (event) {
     event.respondWith(handleRequest(event.request)["catch"](function (err) {
       console.error(err);
