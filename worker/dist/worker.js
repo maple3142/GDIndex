@@ -280,6 +280,30 @@ self.props = {
 
     var assign = Object.assign;
 
+    function mergeDeep(target, source) {
+      var isObject = function isObject(obj) {
+        return obj && _typeof(obj) === 'object';
+      };
+
+      if (!isObject(target) || !isObject(source)) {
+        return source;
+      }
+
+      Object.keys(source).forEach(function (key) {
+        var targetValue = target[key];
+        var sourceValue = source[key];
+
+        if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+          target[key] = targetValue.concat(sourceValue);
+        } else if (isObject(targetValue) && isObject(sourceValue)) {
+          target[key] = mergeDeep(Object.assign({}, targetValue), sourceValue);
+        } else {
+          target[key] = sourceValue;
+        }
+      });
+      return target;
+    }
+
     var fromEntries = function fromEntries(ent) {
       return ent.reduce(function (acc, _ref) {
         var _ref2 = _slicedToArray(_ref, 2),
@@ -319,7 +343,7 @@ self.props = {
 
       var xfetch = function xfetch(input) {
         var init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        assign(init, defaultInit);
+        mergeDeep(init, defaultInit);
 
         var createQueryString = function createQueryString(o) {
           return new init.URLSearchParams(o).toString();
