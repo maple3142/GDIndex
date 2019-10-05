@@ -1,0 +1,7 @@
+{
+	"useTabs": true,
+	"tabWidth": 4,
+	"endOfLine": "lf",
+	"singleQuote": true,
+	"semi": false
+}

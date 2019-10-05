@@ -1,0 +1,6 @@
+account_id = ""
+name = "gdindex"
+type = "webpack"
+route = ""
+workers_dev = true
+zone_id = ""
