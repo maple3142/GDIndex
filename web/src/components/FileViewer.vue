@@ -1,47 +1,66 @@
 <template>
 	<v-container fluid>
 		<v-row justify="center">
-			<v-col md="8">
-				<v-card-title>
-					<v-text-field
-						v-model="search"
-						append-icon="search"
-						:label="$t('search')"
-						single-line
-						hide-details
-					></v-text-field>
-				</v-card-title>
-				<v-data-table
-					:headers="headers"
-					:items="list"
-					:items-per-page="-1"
-					:hide-default-footer="true"
-					:search="search"
-					loading="true"
+			<v-col md="8" lg="6">
+				<v-card
+					class="mx-auto"
+					min-height="400px"
+					tile
+					:loading="loading"
 				>
-					<template v-slot:item="row">
-						<router-link
-							:to="{
-								path: row.item.resourcePath,
-								query: {
-									rootId: $route.query.rootId,
-									opener: row.item.opener
-								}
-							}"
-							class="fake-tr"
-						>
-							<td class="text-start">
-								{{ row.item.fileName }}
-							</td>
-							<td class="text-start">
-								{{ row.item.modifiedTime }}
-							</td>
-							<td class="text-start">
-								{{ row.item.fileSize }}
-							</td>
-						</router-link>
-					</template>
-				</v-data-table>
+					<portal to="navbar">
+						<v-toolbar-items>
+							<template v-for="seg in pathSegments">
+								<v-icon :key="seg.path + '-icon'"
+									>mdi-menu-right</v-icon
+								>
+								<v-btn
+									text
+									class="text-none"
+									:key="seg.path + '-btn'"
+									@click="goPath(seg.path)"
+									>{{ seg.name }}</v-btn
+								>
+							</template>
+						</v-toolbar-items>
+					</portal>
+					<v-row>
+						<v-col>
+							<v-list-item
+								v-for="item in list"
+								:key="item.id"
+								@click="goPath(item.resourcePath, item.opener)"
+								class="pl-0"
+							>
+								<v-list-item-avatar class="ma-0">
+									<v-icon>{{ item.icon }}</v-icon>
+								</v-list-item-avatar>
+								<v-list-item-content class="py-2">
+									<v-list-item-title
+										v-text="item.fileName"
+									></v-list-item-title>
+									<v-list-item-subtitle
+										v-if="!item.isFolder"
+										v-text="item.fileSize"
+									></v-list-item-subtitle>
+								</v-list-item-content>
+								<v-list-item-action>
+									<v-btn
+										icon
+										v-if="
+											!item.isFolder && !item.isGoogleFile
+										"
+										@click.stop="goPath(item.resourcePath)"
+									>
+										<v-icon color="black">
+											mdi-file-download
+										</v-icon>
+									</v-btn>
+								</v-list-item-action>
+							</v-list-item>
+						</v-col>
+					</v-row>
+				</v-card>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -50,17 +69,58 @@
 import { format } from 'date-fns'
 import prettyBytes from 'pretty-bytes'
 import nodeUrl from 'url'
+import nodePath from 'path'
 import api from '../api'
+import ImageViewer from 'viewerjs'
+import 'viewerjs/dist/viewer.css'
 
 const SUPPORTED_TYPES = {
 	'application/epub+zip': 'epubviewer',
-	'video/mp4': 'videoviewer'
+	'video/mp4': 'videoviewer',
+	'image/png': 'imageviewer',
+	'image/jpeg': 'imageviewer',
+	'image/gif': 'imageviewer',
+	'image/bmp': 'imageviewer'
+}
+const ICON_NAME = {
+	'application/vnd.google-apps.folder': 'mdi-folder',
+	'application/epub+zip': 'mdi-book',
+	'application/vnd.android.package-archive': 'mdi-android',
+	'video/mp4': 'mdi-video',
+	'video/x-msvideo': 'mdi-video',
+	'video/x-flv': 'mdi-video',
+	'video/x-ms-wmv': 'mdi-video',
+	'video/webm': 'mdi-video',
+	'video/x-matroska': 'mdi-video',
+	'application/zip': 'mdi-archive',
+	'application/x-7z-compressed': 'mdi-archive',
+	'application/x-rar-compressed': 'mdi-archive',
+	'application/x-gzip': 'mdi-archive',
+	'image/png': 'mdi-file-image',
+	'image/jpeg': 'mdi-file-image',
+	'image/gif': 'mdi-file-image',
+	'image/bmp': 'mdi-file-image',
+	'application/msword': 'mdi-file-word',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+		'mdi-file-word',
+	'application/vnd.ms-excel': 'mdi-file-excel',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+		'mdi-file-excel',
+	'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+		'mdi-file-powerpoint',
+	'application/vnd.ms-powerpoint': 'mdi-file-powerpoint',
+	'application/pdf': 'mdi-file-pdf',
+	'text/x-sql': 'mdi-database',
+	'application/vnd.google-apps.document': 'mdi-file-document-box',
+	'application/vnd.google-apps.spreadsheet': 'mdi-google-spreadsheet',
+	'application/vnd.google-apps.presentation': 'mdi-file-presentation-box',
+	'text/plain': 'mdi-file-document'
 }
 export default {
 	data() {
 		return {
-			search: '',
 			list: [],
+			loading: false,
 			headers: [
 				{
 					text: this.$t('fileName'),
@@ -70,23 +130,57 @@ export default {
 				{
 					text: this.$t('modifiedTime'),
 					value: 'modifiedTime',
-					filterable: false
+					filterable: false,
+					class: 'hidden-sm-and-down'
 				},
 				{
 					text: this.$t('fileSize'),
 					value: 'fileSize',
-					filterable: false
+					filterable: false,
+					class: 'hidden-sm-and-down'
 				}
-			]
+			],
+			renderStart: null
 		}
 	},
 	computed: {
 		path() {
 			return '/' + this.$route.params.path
+		},
+		pathSegments() {
+			const list = this.path
+				.split('/')
+				.filter(Boolean)
+				.map(decodeURIComponent)
+			const ar = []
+			for (let i = 0; i < list.length; i++) {
+				ar.push({
+					name: list[i],
+					path: '/' + nodePath.join(...list.slice(0, i + 1)) + '/'
+				})
+			}
+			return ar
 		}
 	},
 	methods: {
+		goPath(path, opener) {
+			const query = {
+				rootId: this.$route.query.rootId
+			}
+			if (opener) {
+				query.opener = opener
+			}
+			this.$router.push({
+				path: path
+					.split('/')
+					.map(encodeURIComponent)
+					.join('/'),
+				query
+			})
+		},
 		async renderPath(path, rootId) {
+			let renderStart = (this.renderStart = Date.now()) // Withous this, when user regret navigating a big folder, it will have some conflict.
+			this.loading = true
 			if (!rootId) {
 				rootId = window.props.defaultRootId
 			}
@@ -99,9 +193,15 @@ export default {
 					}
 				})
 				.json()
+			if (renderStart !== this.renderStart) {
+				// User had initiated other folder navigation request
+				return
+			}
 			this.list = files.map(f => {
+				f.mimeType = f.mimeType.replace('; charset=utf-8', '')
 				const isFolder =
 					f.mimeType === 'application/vnd.google-apps.folder'
+				const isGoogleFile = f.mimeType.includes('vnd.google-apps')
 				const resourcePath =
 					nodeUrl.resolve(path, f.name) + (isFolder ? '/' : '')
 				const o = {
@@ -110,28 +210,31 @@ export default {
 						new Date(f.modifiedTime),
 						'yyyy/MM/dd HH:mm:ss'
 					),
+					isFolder,
+					isGoogleFile,
 					mimeType: f.mimeType,
 					fileSize: f.size ? prettyBytes(parseInt(f.size)) : '',
-					resourcePath
+					resourcePath,
+					icon: ICON_NAME[f.mimeType] || 'mdi-file'
 				}
 				if (f.mimeType in SUPPORTED_TYPES) {
 					o.opener = SUPPORTED_TYPES[f.mimeType]
 				}
 				return o
 			})
-			if (path !== '/') {
-				this.list.unshift({
-					fileName: '../',
-					resourcePath: nodeUrl.resolve(path, '../')
-				})
-			}
+			this.loading = false
 		},
 		handlePath(path, query) {
+			path = path
+				.split('/')
+				.map(encodeURIComponent)
+				.join('/')
 			if (path.substr(-1) === '/') {
 				this.renderPath(path, query.rootId)
 				return true
 			} else {
 				let u = nodeUrl.resolve(window.props.api, path)
+				//if (Math.random() < 10) return
 				if (
 					query.rootId &&
 					query.rootId !== window.props.defaultRootId
@@ -139,6 +242,22 @@ export default {
 					u += '?rootId=' + query.rootId
 				}
 				if (query.opener) {
+					if (query.opener === 'imageviewer') {
+						const img = new Image()
+						img.src = u
+						img.style.display = 'none'
+						document.body.appendChild(img)
+						img.onload = () => {
+							const viewer = new ImageViewer(img)
+							viewer.show()
+							img.addEventListener('hide', () => {
+								viewer.destroy()
+								img.remove()
+							})
+						}
+
+						return
+					}
 					this.$router.push({
 						path: '/~' + query.opener,
 						query: { url: u }
@@ -177,5 +296,19 @@ export default {
 	.fake-tr:not(:last-child)
 	td:not(.v-data-table__mobile-row) {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.line-height {
+	height: 48px;
+	line-height: 48px;
+}
+.wrapper {
+	display: flex;
+	align-items: center;
+}
+.icon-wrapper {
+	box-sizing: border-box;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>

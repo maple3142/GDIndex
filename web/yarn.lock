@@ -6506,6 +6506,11 @@ pluralize@^7.0.0:
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
   integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
 
+portal-vue@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.6.tgz#a7d4790b14a79af7fd159a60ec88c30cddc6c639"
+  integrity sha512-lvCF85D4e8whd0nN32D8FqKwwkk7nYUI3Ku8UAEx4Z1reomu75dv5evRUTZNaj1EalxxWNXiNl0EHRq36fG8WA==
+
 portfinder@^1.0.20, portfinder@^1.0.24:
   version "1.0.24"
   resolved "https://registry.yarnpkg.com/portfinder/-/portfinder-1.0.24.tgz#11efbc6865f12f37624b6531ead1d809ed965cfa"
@@ -8694,6 +8699,11 @@ verror@1.10.0:
     assert-plus "^1.0.0"
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
+
+viewerjs@^1.3.7:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.3.7.tgz#eb2b58a538d07d6bdb680f0f0bd85be887153347"
+  integrity sha512-I7iD166zrqxocoNn1c23nwERzMXXxnlJw8eWLsK28DSAhGWSue1ZPaxV2qr7LC4lbhom1OUa7Z/glWsnGaa3bw==
 
 vm-browserify@^1.0.1:
   version "1.1.0"

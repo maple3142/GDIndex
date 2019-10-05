@@ -64,6 +64,10 @@ export default {
 		}
 
 		video.play()
+	},
+	beforeDestroy() {
+		const { video } = this.$refs
+		video && video.stop && video.stop()
 	}
 }
 </script>

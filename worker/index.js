@@ -83,6 +83,10 @@ async function onPost(request) {
 
 async function handleRequest(request) {
 	request = Object.assign({}, request, new URL(request.url))
+	request.pathname = request.pathname
+		.split('/')
+		.map(decodeURIComponent)
+		.join('/')
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)

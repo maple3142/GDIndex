@@ -906,6 +906,7 @@ self.props = {
 
   var handleRequest = _async(function (request) {
     request = Object.assign({}, request, new URL(request.url));
+    request.pathname = request.pathname.split('/').map(decodeURIComponent).join('/');
     var resp;
     return _invoke(function () {
       if (request.method === 'GET') return _await$1(onGet(request), function (_onGet) {
