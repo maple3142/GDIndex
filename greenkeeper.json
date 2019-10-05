@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "web/package.json",
+        "worker/package.json"
+      ]
+    }
+  }
+}
