@@ -1,6 +1,6 @@
 self.props = {
 	title: 'GDIndex',
-	defaultRootId: '0AGeHrEz5q-XLUk9PVA',
+	defaultRootId: 'root',
 	client_id: '202264815644.apps.googleusercontent.com',
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
 	refresh_token: ''
