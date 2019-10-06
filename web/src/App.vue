@@ -59,15 +59,17 @@ export default {
 		}
 	},
 	async created() {
-		const ok = await api
-			.get(window.props.api)
-			.then(() => true)
-			.catch(err => {
-				if (err.response.status === 401) {
-					this.showAuthInput = true
-					return false
-				}
-			})
+		const ok =
+			new URL(props.api).hostname === location.hostname ||
+			(await api
+				.get(window.props.api)
+				.then(() => true)
+				.catch(err => {
+					if (err.response.status === 401) {
+						this.showAuthInput = true
+						return false
+					}
+				}))
 		if (!ok) return
 
 		const { drives } = await api.get('/~_~_gdindex/drives').json()
