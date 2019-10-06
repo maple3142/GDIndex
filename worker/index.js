@@ -43,7 +43,7 @@ async function onGet(request) {
 		if (!isGoogleApps) {
 			const r = await gd.download(result.id, request.headers.get('Range'))
 			const h = new Headers(r.headers)
-			h.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			h.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(result.name)}`)
 			return new Response(r.body, {
 				status: r.status,
 				headers: h

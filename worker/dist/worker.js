@@ -792,6 +792,74 @@ self.props = {
           return Promise.reject(e);
         }
       }
+    }, {
+      key: "upload",
+      value: function upload(parentId, name, file) {
+        try {
+          var _this22 = this;
+
+          return _await(_this22.initializeClient(), function () {
+            return _await(_this22.client.post('https://www.googleapis.com/upload/drive/v3/files', {
+              qs: {
+                uploadType: 'resumable',
+                supportsAllDrives: true
+              },
+              json: {
+                name: name,
+                parents: [parentId]
+              }
+            }), function (createResp) {
+              var putUrl = createResp.headers.get('Location');
+              return _this22.client.put(putUrl, {
+                body: file
+              }).json();
+            });
+          });
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
+    }, {
+      key: "uploadByPath",
+      value: function uploadByPath(path, name, file) {
+        var rootId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'root';
+
+        try {
+          var _this24 = this;
+
+          return _await(_this24.getId(path, rootId), function (id) {
+            return id ? _this24.upload(id, name, file) : null;
+          });
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
+    }, {
+      key: "delete",
+      value: function _delete(fileId) {
+        try {
+          var _this26 = this;
+
+          return _this26.client["delete"]("files/".concat(fileId));
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
+    }, {
+      key: "deleteByPath",
+      value: function deleteByPath(path) {
+        var rootId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'root';
+
+        try {
+          var _this28 = this;
+
+          return _await(_this28.getId(path, rootId), function (id) {
+            return id ? _this28["delete"](id) : null;
+          });
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
     }]);
 
     return GoogleDrive;
@@ -1175,7 +1243,7 @@ self.props = {
         if (!isGoogleApps) {
           return _await$1(gd.download(result.id, request.headers.get('Range')), function (r) {
             var h = new Headers(r.headers);
-            h.set('Content-Disposition', "attachment; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
+            h.set('Content-Disposition', "inline; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
             return new Response(r.body, {
               status: r.status,
               headers: h
