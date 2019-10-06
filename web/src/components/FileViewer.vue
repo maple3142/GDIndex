@@ -75,12 +75,12 @@ import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 
 const SUPPORTED_TYPES = {
-	'application/epub+zip': 'epubviewer',
-	'video/mp4': 'videoviewer',
-	'image/png': 'imageviewer',
-	'image/jpeg': 'imageviewer',
-	'image/gif': 'imageviewer',
-	'image/bmp': 'imageviewer'
+	'application/epub+zip': 'epub',
+	'video/mp4': 'video',
+	'image/png': 'image',
+	'image/jpeg': 'image',
+	'image/gif': 'image',
+	'image/bmp': 'image'
 }
 const ICON_NAME = {
 	'application/vnd.google-apps.folder': 'mdi-folder',
@@ -240,7 +240,7 @@ export default {
 					u += '?rootId=' + query.rootId
 				}
 				if (query.opener) {
-					if (query.opener === 'imageviewer') {
+					if (query.opener === 'image') {
 						const img = new Image()
 						img.src = u
 						img.style.display = 'none'
@@ -257,7 +257,7 @@ export default {
 						return
 					}
 					this.$router.push({
-						path: '/~' + query.opener,
+						path: '/~viewer/' + query.opener,
 						query: { urlBase64: btoa(u) }
 					})
 				} else {

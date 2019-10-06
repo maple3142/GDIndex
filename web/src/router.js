@@ -7,8 +7,8 @@ import VideoViewer from './components/VideoViewer.vue'
 Vue.use(VueRouter)
 const router = new VueRouter({
 	routes: [
-		{ path: '/~epubviewer', component: EpubViewer },
-		{ path: '/~videoviewer', component: VideoViewer },
+		{ path: '/~viewer/epub', component: EpubViewer },
+		{ path: '/~viewer/video', component: VideoViewer },
 		{ path: '/:path(.*)', component: FileViewer }
 	],
 	mode: 'history'
