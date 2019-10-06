@@ -54,7 +54,10 @@
 										v-if="
 											!item.isFolder && !item.isGoogleFile
 										"
-										@click.stop="goPath(item.resourcePath)"
+										tag="a"
+										:href="getFileUrl(item.resourcePath)"
+										download
+										@click.stop
 									>
 										<v-icon color="black">
 											mdi-file-download
