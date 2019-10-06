@@ -1203,7 +1203,8 @@ self.props = {
   function unauthorized() {
     return new Response('Unauthorized', {
       headers: {
-        'WWW-Authenticate': 'Basic realm="goindex"'
+        'WWW-Authenticate': 'Basic realm="goindex"',
+        'Access-Control-Allow-Origin': '*'
       },
       status: 401
     });
