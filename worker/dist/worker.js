@@ -1022,7 +1022,13 @@ self.props = {
       });else return _invokeIgnored(function () {
         if (request.method === 'POST') return _await$1(onPost(request), function (_onPost) {
           resp = _onPost;
-        });else resp = new Response('', {
+        });else if (request.method === 'OPTIONS') // allow preflight request
+          resp = new Response('', {
+            status: 200,
+            headers: {
+              'Access-Control-Allow-Origin': '*'
+            }
+          });else resp = new Response('', {
           status: 405
         });
       });

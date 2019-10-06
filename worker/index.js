@@ -122,6 +122,14 @@ async function handleRequest(request) {
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)
+	else if (request.method === 'OPTIONS')
+		// allow preflight request
+		resp = new Response('', {
+			status: 200,
+			headers: {
+				'Access-Control-Allow-Origin': '*'
+			}
+		})
 	else
 		resp = new Response('', {
 			status: 405
