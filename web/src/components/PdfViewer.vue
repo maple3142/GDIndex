@@ -25,7 +25,10 @@ export default {
 			const win = iframe.contentWindow
 			api.get(url)
 				.then(r => r.arrayBuffer())
-				.then(ab => win.PDFViewerApplication.open(ab))
+				.then(ab => {
+					win.PDFViewerApplication.open(ab)
+					win.PDFViewerApplication.setTitleUsingUrl(url)
+				})
 		}
 	}
 }
