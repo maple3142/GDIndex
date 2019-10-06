@@ -10,19 +10,19 @@
 
 ## 和 GOIndex 不同之處
 
-* 前端使用 Vue 完成
-* 圖片檢視不用另開新頁面
-* 影片播放器支援字幕(目前只有 srt)
-* 線上 PDF, EPUB 閱讀器
-* 不支援目錄加密(.password)
-* 支援 Http Basic Auth
-* 支援多雲端硬碟(個人、團隊)，不需要額外改程式設定
+-   前端使用 Vue 完成
+-   圖片檢視不用另開新頁面
+-   影片播放器支援字幕(目前只有 srt)
+-   線上 PDF, EPUB 閱讀器
+-   不支援目錄加密(.password)
+-   支援 Http Basic Auth
+-   支援多雲端硬碟(個人、團隊)，不需要額外改程式設定
 
 ## 使用教學
 
 ### 簡單、自動的方法
 
-前往 [https://gdxindex-code-builder.glitch.me/](https://gdxindex-code-builder.glitch.me/)(英文) 並遵照它的指示。
+前往 [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch.me/)(英文) 並遵照它的指示。
 
 ### 手動的方法
 
