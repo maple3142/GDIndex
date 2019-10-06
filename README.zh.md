@@ -13,11 +13,23 @@
 * 前端使用 Vue 完成
 * 图片检视不用另开新页面
 * 视频播放器支援字幕(目前只有 srt)
-* 线上 EPUB 阅读器
+* 线上 PDF, EPUB 阅读器
 * 不支援目录加密(.password)
 * 支援 Http Basic Auth
 * 支援多云端硬盘(个人、团队)，不需要额外改程序设定
 
 ## 使用教学
 
-先参考 [GOIndex 的教学](https://github.com/donwa/goindex)取得 `refresh_token`，然后复制 [worker/dist/worker.js](worker/dist/worker.js) 的内容，把原本就有的 `refresh_token` 贴上到对应的字段就可以了
+### 简单、自动的方法
+
+前往 [https://gdxindex-code-builder.glitch.me/](https://gdxindex-code-builder.glitch.me/)(英文) 并遵照它的指示。
+
+### 手动的方法
+
+1. 安装 [rclone](https://rclone.org/)
+2. 设定 Google Drive: https://rclone.org/drive/
+3. 执行 `rclone config file` 以找到你的 `rclone.conf`
+4. 在 `rclone.conf` 中寻找 `refresh_token` 以及 `root_folder_id` (选择性)
+5. 复制 [worker/dist/worker.js](worker/dist/worker.js) 的内容到 CloudFlare Workers
+6. 在脚本顶端填上 `refresh_token`, `root_folder_id` 以及其他的选项
+7. 部署!

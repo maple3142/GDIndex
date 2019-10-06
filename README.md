@@ -17,11 +17,23 @@
 * Frontend is based on Vue.js
 * Image viewer doesn't require opening new page
 * Video player support subtitles(Currently only srt is supported)
-* Online EPUB reader
+* Online PDF, EPUB reader
 * No directory-level password protection(.password)
 * Support Http Basic Auth
 * Support multiple drives(personal, team) without changing server's code
 
 ## Usage
 
-Follow [GOIndex's instructions](https://github.com/donwa/goindex) to get `refresh_token`, then copy the content of [worker/dist/worker.js](worker/dist/worker.js), and paste your `refresh_token` to the correspond field. That's all!
+### Simple and automatic way
+
+Go [https://gdxindex-code-builder.glitch.me/](https://gdxindex-code-builder.glitch.me/), and follow its instructions.
+
+### Manual way
+
+1. Install [rclone](https://rclone.org/)
+2. Setup your Google Drive: https://rclone.org/drive/
+3. Run `rclone config file` to find your `rclone.conf` location
+4. Find `refresh_token` in your `rclone.conf`, and `root_folder_id` too(optionally).
+5. Copy the content of [worker/dist/worker.js](worker/dist/worker.js) to CloudFlare Workers.
+6. Fill `refresh_token`, `root_folder_id`  and other options on the top of the script.
+7. Deploy!
