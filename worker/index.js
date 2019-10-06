@@ -13,7 +13,8 @@ async function onGet(request) {
 		const r = await fetch(`https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/${remain}`)
 		return new Response(r.body, {
 			headers: {
-				'Content-Type': mime.getType(remain) + '; charset=utf-8'
+				'Content-Type': mime.getType(remain) + '; charset=utf-8',
+				'Cache-Control': 'max-age=600'
 			}
 		})
 	} else if (path === '/~_~_gdindex/drives') {

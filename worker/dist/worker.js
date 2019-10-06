@@ -1140,7 +1140,8 @@ self.props = {
       return _await$1(fetch("https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/".concat(remain)), function (r) {
         return new Response(r.body, {
           headers: {
-            'Content-Type': mime.getType(remain) + '; charset=utf-8'
+            'Content-Type': mime.getType(remain) + '; charset=utf-8',
+            'Cache-Control': 'max-age=600'
           }
         });
       });
