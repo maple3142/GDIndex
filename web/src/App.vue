@@ -1,7 +1,7 @@
 <template>
 	<v-app>
 		<v-app-bar app color="primary" dark>
-			<v-toolbar-title class="headline pointer mr-3">
+			<v-toolbar-title class="headline pointer mr-3 hidden-sm-and-down">
 				<router-link
 					:to="{ path: '/', query: { rootId: $route.query.rootId } }"
 					tag="span"
@@ -31,6 +31,18 @@
 				</v-menu>
 			</v-toolbar-items>
 			<portal-target name="navbar" slim />
+			<v-spacer />
+			<v-toolbar-items>
+				<v-btn
+					text
+					class="text-none hidden-sm-and-down"
+					tag="a"
+					href="https://github.com/maple3142/GDIndex"
+					target="_blank"
+				>
+					<v-icon>mdi-github-circle</v-icon>&nbsp;GitHub</v-btn
+				>
+			</v-toolbar-items>
 		</v-app-bar>
 
 		<v-content> <router-view /> </v-content>
@@ -82,12 +94,16 @@ export default {
 	},
 	methods: {
 		changeDrive(drive) {
-			if (drive === this.currentDrive.value) return
-			if (drive !== window.props.defaultRootId) {
-				this.$router.push({ path: '/', query: { rootId: drive } })
-			} else {
-				this.$router.push({ path: '/', query: { rootId: undefined } })
+			const rootId =
+				drive !== window.props.defaultRootId ? drive : undefined
+			const dest = { path: '/', query: { rootId } }
+			if (
+				dest.path === this.$route.path &&
+				dest.query.rootId === this.$route.query.rootId
+			) {
+				return // vue-router forbid going to same location
 			}
+			this.$router.push({ path: '/', query: { rootId } })
 		}
 	},
 	components: { LoginDialog }
