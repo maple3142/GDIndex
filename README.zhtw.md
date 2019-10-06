@@ -1,6 +1,6 @@
 # GDIndex
 
-![preview](https://i.imgur.com/4DgDmFI.png)
+![preview](https://i.imgur.com/ENkZwCU.png)
 
 > GDIndex 是一個類似 [GOIndex](https://github.com/donwa/goindex) 的東西，可以在 CloudFlare Workers 上架設 Google Drive 的目錄，並提供許多功能
 >

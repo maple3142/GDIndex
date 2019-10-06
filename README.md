@@ -1,6 +1,6 @@
 # GDIndex
 
-![preview](https://i.imgur.com/4DgDmFI.png)
+![preview](https://i.imgur.com/ENkZwCU.png)
 
 [繁體中文](README.zhtw.md)
 [简体中文](README.zh.md)
