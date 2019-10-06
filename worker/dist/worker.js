@@ -1136,7 +1136,7 @@ self.props = {
           }
         });
       });
-    } else if (path.substr(-1) === '/') {
+    } else if (path.substr(-1) === '/' && !path.startsWith('/~viewer')) {
       return new Response(HTML, {
         headers: {
           'Content-Type': 'text/html; charset=utf-8'
