@@ -1105,7 +1105,14 @@ self.props = {
         var isGoogleApps = result.mimeType.includes('vnd.google-apps');
 
         if (!isGoogleApps) {
-          return gd.download(result.id, request.headers.get('Range'));
+          return _await$1(gd.download(result.id, request.headers.get('Range')), function (r) {
+            var h = new Headers(r.headers);
+            h.set('Content-Disposition', "attachment; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
+            return new Response(r.body, {
+              status: r.status,
+              headers: h
+            });
+          });
         } else {
           return Response.redirect(result.webViewLink, 302);
         }
@@ -1156,7 +1163,14 @@ self.props = {
         var isGoogleApps = result.mimeType.includes('vnd.google-apps');
 
         if (!isGoogleApps) {
-          return gd.download(result.id, request.headers.get('Range'));
+          return _await$1(gd.download(result.id, request.headers.get('Range')), function (r) {
+            var h = new Headers(r.headers);
+            h.set('Content-Disposition', "attachment; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
+            return new Response(r.body, {
+              status: r.status,
+              headers: h
+            });
+          });
         } else {
           return Response.redirect(result.webViewLink, 302);
         }

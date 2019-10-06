@@ -40,7 +40,13 @@ async function onGet(request) {
 		}
 		const isGoogleApps = result.mimeType.includes('vnd.google-apps')
 		if (!isGoogleApps) {
-			return gd.download(result.id, request.headers.get('Range'))
+			const r = await gd.download(result.id, request.headers.get('Range'))
+			const h = new Headers(r.headers)
+			h.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			return new Response(r.body, {
+				status: r.status,
+				headers: h
+			})
 		} else {
 			return Response.redirect(result.webViewLink, 302)
 		}
@@ -67,7 +73,13 @@ async function onPost(request) {
 		}
 		const isGoogleApps = result.mimeType.includes('vnd.google-apps')
 		if (!isGoogleApps) {
-			return gd.download(result.id, request.headers.get('Range'))
+			const r = await gd.download(result.id, request.headers.get('Range'))
+			const h = new Headers(r.headers)
+			h.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			return new Response(r.body, {
+				status: r.status,
+				headers: h
+			})
 		} else {
 			return Response.redirect(result.webViewLink, 302)
 		}
