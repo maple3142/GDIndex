@@ -84,7 +84,8 @@ const SUPPORTED_TYPES = {
 	'image/png': 'image',
 	'image/jpeg': 'image',
 	'image/gif': 'image',
-	'image/bmp': 'image'
+	'image/bmp': 'image',
+	'application/pdf': 'pdf'
 }
 const ICON_NAME = {
 	'application/vnd.google-apps.folder': 'mdi-folder',

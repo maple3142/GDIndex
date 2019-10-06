@@ -1,5 +1,5 @@
 <template>
-	<v-container fluid fill-height>
+	<v-container fluid fill-height class="pt-0 pb-0">
 		<v-layout row wrap>
 			<v-flex d-flex>
 				<iframe ref="container"></iframe>
