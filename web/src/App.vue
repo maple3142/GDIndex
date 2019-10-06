@@ -60,7 +60,7 @@ export default {
 	},
 	async created() {
 		const ok =
-			new URL(props.api).hostname === location.hostname ||
+			new URL(window.props.api).hostname === location.hostname ||
 			(await api
 				.get(window.props.api)
 				.then(() => true)
