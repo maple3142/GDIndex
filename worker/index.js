@@ -110,6 +110,15 @@ function doBasicAuth(request) {
 	return user === self.props.user && pass === self.props.pass
 }
 async function handleRequest(request) {
+	if (request.method === 'OPTIONS')
+		// allow preflight request
+		return new Response('', {
+			status: 200,
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Headers': 'Authorization'
+			}
+		})
 	if (self.props.enable_basic_auth && !doBasicAuth(request)) {
 		return unauthorized()
 	}
@@ -122,14 +131,6 @@ async function handleRequest(request) {
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)
-	else if (request.method === 'OPTIONS')
-		// allow preflight request
-		resp = new Response('', {
-			status: 200,
-			headers: {
-				'Access-Control-Allow-Origin': '*'
-			}
-		})
 	else
 		resp = new Response('', {
 			status: 405
