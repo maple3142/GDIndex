@@ -22,7 +22,7 @@ async function onGet(request) {
 				'Content-Type': 'application/json'
 			}
 		})
-	} else if (path.substr(-1) === '/' && !path.startsWith('/~viewer')) {
+	} else if (path.substr(-1) === '/' || path.startsWith('/~viewer')) {
 		return new Response(HTML, {
 			headers: {
 				'Content-Type': 'text/html; charset=utf-8'

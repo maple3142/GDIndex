@@ -1008,6 +1008,15 @@ self.props = {
   }
 
   var handleRequest = _async(function (request) {
+    if (request.method === 'OPTIONS') // allow preflight request
+      return new Response('', {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Authorization'
+        }
+      });
+
     if (self.props.enable_basic_auth && !doBasicAuth(request)) {
       return unauthorized();
     }
@@ -1022,13 +1031,7 @@ self.props = {
       });else return _invokeIgnored(function () {
         if (request.method === 'POST') return _await$1(onPost(request), function (_onPost) {
           resp = _onPost;
-        });else if (request.method === 'OPTIONS') // allow preflight request
-          resp = new Response('', {
-            status: 200,
-            headers: {
-              'Access-Control-Allow-Origin': '*'
-            }
-          });else resp = new Response('', {
+        });else resp = new Response('', {
           status: 405
         });
       });
@@ -1149,7 +1152,7 @@ self.props = {
           }
         });
       });
-    } else if (path.substr(-1) === '/' && !path.startsWith('/~viewer')) {
+    } else if (path.substr(-1) === '/' || path.startsWith('/~viewer')) {
       return new Response(HTML, {
         headers: {
           'Content-Type': 'text/html; charset=utf-8'
