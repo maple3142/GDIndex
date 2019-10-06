@@ -118,5 +118,37 @@ class GoogleDrive {
 		this._getIdCache.has(parentId + childName)
 		return resp.files[0].id
 	}
+	async upload(parentId, name, file) {
+		await this.initializeClient()
+		const createResp = await this.client.post('https://www.googleapis.com/upload/drive/v3/files', {
+			qs: {
+				uploadType: 'resumable',
+				supportsAllDrives: true
+			},
+			json: {
+				name,
+				parents: [parentId]
+			}
+		})
+		const putUrl = createResp.headers.get('Location')
+		return this.client
+			.put(putUrl, {
+				body: file
+			})
+			.json()
+	}
+	async uploadByPath(path, name, file, rootId = 'root') {
+		const id = await this.getId(path, rootId)
+		if (!id) return null
+		return this.upload(id, name, file)
+	}
+	async delete(fileId) {
+		return this.client.delete(`files/${fileId}`)
+	}
+	async deleteByPath(path, rootId = 'root') {
+		const id = await this.getId(path, rootId)
+		if (!id) return null
+		return this.delete(id)
+	}
 }
 export default GoogleDrive
