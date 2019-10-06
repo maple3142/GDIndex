@@ -11,13 +11,25 @@
 import html from 'raw-loader!../assets/epub-reader.html'
 
 export default {
-	mounted() {
+	async mounted() {
 		const url = atob(this.$route.query.urlBase64)
 		const iframe = this.$refs.container
 		iframe.srcdoc = html
 		iframe.onload = () => {
-			iframe.contentWindow.reader = iframe.contentWindow.ePubReader(url)
-			iframe.contentWindow.history.pushState = () => {}
+			const win = iframe.contentWindow
+			if (localStorage.token) {
+				win.XMLHttpRequest.prototype._send =
+					win.XMLHttpRequest.prototype.send
+				win.XMLHttpRequest.prototype.send = function(...args) {
+					this.setRequestHeader(
+						'Authorization',
+						'Basic ' + localStorage.token
+					)
+					return this._send(...args)
+				}
+			}
+			win.reader = win.ePubReader(url)
+			win.history.pushState = () => {}
 			iframe.focus()
 		}
 	}

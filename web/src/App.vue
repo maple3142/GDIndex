@@ -34,10 +34,12 @@
 		</v-app-bar>
 
 		<v-content> <router-view /> </v-content>
+		<LoginDialog :cond="showAuthInput" />
 	</v-app>
 </template>
 <script>
 import api from './api'
+import LoginDialog from './components/LoginDialog.vue'
 
 export default {
 	props: {
@@ -46,7 +48,8 @@ export default {
 	data() {
 		return {
 			drives: [],
-			value: {}
+			value: {},
+			showAuthInput: false
 		}
 	},
 	computed: {
@@ -56,6 +59,17 @@ export default {
 		}
 	},
 	async created() {
+		const ok = await api
+			.get(window.props.api)
+			.then(() => true)
+			.catch(err => {
+				if (err.response.status === 401) {
+					this.showAuthInput = true
+					return false
+				}
+			})
+		if (!ok) return
+
 		const { drives } = await api.get('/~_~_gdindex/drives').json()
 		this.drives = [{ text: this.$t('mainDrive'), value: 'root' }].concat(
 			drives.map(d => ({
@@ -73,6 +87,7 @@ export default {
 				this.$router.push({ path: '/', query: { rootId: undefined } })
 			}
 		}
-	}
+	},
+	components: { LoginDialog }
 }
 </script>

@@ -29,8 +29,12 @@
 							<v-list-item
 								v-for="item in list"
 								:key="item.id"
-								@click="goPath(item.resourcePath, item.opener)"
+								@click.prevent="
+									goPath(item.resourcePath, item.opener)
+								"
 								class="pl-0"
+								tag="a"
+								:href="getFileUrl(item.resourcePath)"
 							>
 								<v-list-item-avatar class="ma-0">
 									<v-icon>{{ item.icon }}</v-icon>
@@ -179,6 +183,20 @@ export default {
 					.join('/'),
 				query
 			})
+		},
+		getFileUrl(path) {
+			const { rootId } = this.$route.query
+			let u = nodeUrl.resolve(
+				window.props.api,
+				path
+					.split('/')
+					.map(encodeURIComponent)
+					.join('/')
+			)
+			if (rootId) {
+				u += '?rootId=' + rootId
+			}
+			return u
 		},
 		async renderPath(path, rootId) {
 			let renderStart = (this.renderStart = Date.now()) // Withous this, when user regret navigating a big folder, it will have some conflict.
