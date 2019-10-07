@@ -99,7 +99,12 @@ async function onPut(request) {
 	const url = request.searchParams.get('url')
 	let fileBody
 	if (url) {
-		fileBody = (await fetch(url)).body
+		const u = new URL(url)
+		const Referer = u.href
+		const Origin = u.protocol + '//' + u.host
+		fileBody = (await fetch(url, {
+			headers: { Referer, Origin }
+		})).body
 	} else {
 		fileBody = request.body
 	}

@@ -1178,7 +1178,15 @@ self.props = {
     var fileBody;
     return _invoke(function () {
       if (url) {
-        return _await$1(fetch(url), function (_fetch) {
+        var u = new URL(url);
+        var Referer = u.href;
+        var Origin = u.protocol + '//' + u.host;
+        return _await$1(fetch(url, {
+          headers: {
+            Referer: Referer,
+            Origin: Origin
+          }
+        }), function (_fetch) {
           fileBody = _fetch.body;
         });
       } else {
