@@ -9,5 +9,7 @@ export default {
 	upload: 'Upload',
 	fileToUpload: 'File to upload',
 	uploading: 'Uploading...',
-	serverProcessing: 'Server is processing the file now'
+	serverProcessing: 'Server is processing the file now',
+	bigFileUploadWarning:
+		"Due to CloudFlare Workers' limitation, uploading bigfiles may randomly failed."
 }

@@ -12,5 +12,7 @@ export default {
 	fileToUpload: '要上傳的檔案',
 	uploading: '上傳中...',
 	serverProcessing: '伺服器正在處理檔案',
+	bigFileUploadWarning:
+		'由於 CloudFlare Workers 的限制，上傳大檔案可能會隨機失敗',
 	$vuetify
 }

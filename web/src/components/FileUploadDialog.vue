@@ -1,27 +1,24 @@
 <template>
 	<v-dialog :persistent="uploading" v-model="innerShow" max-width="500">
 		<v-card v-if="!uploading">
-			<v-card-title
-				class="headline"
-				v-text="$t('fileUpload')"
-			></v-card-title>
+			<v-card-title class="headline">
+				<span>{{ $t('fileUpload') }}</span>
+				<v-switch
+					v-model="uploadFromUrl"
+					class="ml-4 mt-0 pt-0 title-switch"
+					:label="$t('urlUpload')"
+				>
+				</v-switch>
+			</v-card-title>
 			<v-card-text>
 				<v-container>
-					<v-row>
-						<v-col>
-							<v-switch
-								v-model="uploadFromUrl"
-								class="ma-2"
-								:label="$t('urlUpload')"
-							></v-switch>
-						</v-col>
-					</v-row>
 					<v-row>
 						<v-col v-if="uploadFromUrl">
 							<v-text-field
 								:label="$t('urlUpload')"
 								v-model="url"
 								:error="showError"
+								:messages="$t('bigFileUploadWarning')"
 							></v-text-field>
 						</v-col>
 						<v-col v-else>
@@ -179,3 +176,11 @@ export default {
 	}
 }
 </script>
+<style>
+.title-switch .v-messages {
+	display: none;
+}
+.title-switch .v-input__slot {
+	margin-bottom: 0px !important;
+}
+</style>

@@ -12,5 +12,7 @@ export default {
 	fileToUpload: '要上传的文件',
 	uploading: '上傳中...',
 	serverProcessing: '服务器正在处里文件',
+	bigFileUploadWarning:
+		'由于 CloudFlare Workers 的限制，上传大档案可能会随机失败',
 	$vuetify
 }
