@@ -112,11 +112,11 @@ class GoogleDrive {
 			})
 			.json()
 			.catch(e => ({ files: [] })) // if error, make it empty
-		if (resp.files.length !== 1) {
+		if (resp.files.length === 0) {
 			return null
 		}
 		this._getIdCache.has(parentId + childName)
-		return resp.files[0].id
+		return resp.files[0].id // when there are more than 1 items, simply return the first one
 	}
 	async upload(parentId, name, file) {
 		await this.initializeClient()

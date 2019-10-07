@@ -779,13 +779,13 @@ self.props = {
               };
             }), function (resp) {
               // if error, make it empty
-              if (resp.files.length !== 1) {
+              if (resp.files.length === 0) {
                 return null;
               }
 
               _this20._getIdCache.has(parentId + childName);
 
-              return resp.files[0].id;
+              return resp.files[0].id; // when there are more than 1 items, simply return the first one
             });
           });
         } catch (e) {
