@@ -6,7 +6,8 @@ self.props = {
 	refresh_token: '',
 	enable_basic_auth: false,
 	user: '',
-	pass: ''
+	pass: '',
+	upload: false
 };
 (function () {
   'use strict';
@@ -1317,7 +1318,7 @@ self.props = {
   }
 
   var gd = new GoogleDrive(self.props);
-  var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"/~_~_gdindex/resources/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "', api: location.protocol + '//' + location.host }</script><div id=app></div><script src=\"/~_~_gdindex/resources/js/app.js\"></script></body></html>");
+  var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"/~_~_gdindex/resources/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "', api: location.protocol + '//' + location.host, upload: ").concat(self.props.upload, " }</script><div id=app></div><script src=\"/~_~_gdindex/resources/js/app.js\"></script></body></html>");
 
   function unauthorized() {
     return new Response('Unauthorized', {

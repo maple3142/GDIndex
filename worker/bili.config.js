@@ -16,6 +16,7 @@ self.props = {
 	refresh_token: '',
 	enable_basic_auth: false,
 	user: '',
-	pass: ''
+	pass: '',
+	upload: false
 };`.slice(1)
 }
