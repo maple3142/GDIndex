@@ -198,7 +198,6 @@ export default {
 					.split('/')
 					.map(decodeURIComponent)
 					.map(encodeURIComponent)
-					.map(encodeURIComponent)
 					.join('/'),
 				query
 			})
