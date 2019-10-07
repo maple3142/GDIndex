@@ -11,6 +11,6 @@ export default {
 	upload: '上傳',
 	fileToUpload: '要上傳的檔案',
 	uploading: '上傳中...',
-	serverProcessing: '伺服器正在處裡檔案',
+	serverProcessing: '伺服器正在處理檔案',
 	$vuetify
 }
