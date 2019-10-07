@@ -76,7 +76,7 @@ async function onPost(request) {
 		if (!isGoogleApps) {
 			const r = await gd.download(result.id, request.headers.get('Range'))
 			const h = new Headers(r.headers)
-			h.set('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			h.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(result.name)}`)
 			return new Response(r.body, {
 				status: r.status,
 				headers: h
@@ -85,6 +85,26 @@ async function onPost(request) {
 			return Response.redirect(result.webViewLink, 302)
 		}
 	}
+}
+async function onPut(request) {
+	let { pathname: path } = request
+	if (path.substr(-1) === '/') {
+		return new Response(null, {
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			status: 405
+		})
+	}
+	const tok = path.split('/')
+	const name = tok.pop()
+	const parent = tok.join('/')
+	const rootId = request.searchParams.get('rootId') || self.props.defaultRootId
+	return new Response(JSON.stringify(await gd.uploadByPath(parent, name, request.body, rootId)), {
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	})
 }
 function unauthorized() {
 	return new Response('Unauthorized', {
@@ -132,6 +152,7 @@ async function handleRequest(request) {
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)
+	else if (request.method === 'PUT') resp = await onPut(request)
 	else
 		resp = new Response('', {
 			status: 405

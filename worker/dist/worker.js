@@ -1099,8 +1099,12 @@ self.props = {
       });else return _invokeIgnored(function () {
         if (request.method === 'POST') return _await$1(onPost(request), function (_onPost) {
           resp = _onPost;
-        });else resp = new Response('', {
-          status: 405
+        });else return _invokeIgnored(function () {
+          if (request.method === 'PUT') return _await$1(onPut(request), function (_onPut) {
+            resp = _onPut;
+          });else resp = new Response('', {
+            status: 405
+          });
         });
       });
     }, function () {
@@ -1156,6 +1160,33 @@ self.props = {
     };
   }
 
+  var onPut = _async(function (request) {
+    var path = request.pathname;
+
+    if (path.substr(-1) === '/') {
+      return new Response(null, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        status: 405
+      });
+    }
+
+    var tok = path.split('/');
+    var name = tok.pop();
+    var parent = tok.join('/');
+    var rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
+    return _await$1(gd.uploadByPath(parent, name, request.body, rootId), function (_gd$uploadByPath) {
+      return new Response(JSON.stringify(_gd$uploadByPath), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    });
+  });
+
+  function _empty() {}
+
   var onPost = _async(function (request) {
     var path = request.pathname;
     var rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
@@ -1184,7 +1215,7 @@ self.props = {
         if (!isGoogleApps) {
           return _await$1(gd.download(result.id, request.headers.get('Range')), function (r) {
             var h = new Headers(r.headers);
-            h.set('Content-Disposition', "attachment; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
+            h.set('Content-Disposition', "inline; filename*=UTF-8''".concat(encodeURIComponent(result.name)));
             return new Response(r.body, {
               status: r.status,
               headers: h
@@ -1197,7 +1228,13 @@ self.props = {
     }
   });
 
-  function _empty() {}
+  function _invokeIgnored(body) {
+    var result = body();
+
+    if (result && result.then) {
+      return result.then(_empty);
+    }
+  }
 
   var onGet = _async(function (request) {
     var path = request.pathname;
@@ -1256,16 +1293,6 @@ self.props = {
     }
   });
 
-  function _invokeIgnored(body) {
-    var result = body();
-
-    if (result && result.then) {
-      return result.then(_empty);
-    }
-  }
-
-  var gd = new GoogleDrive(self.props);
-
   function _invoke(body, then) {
     var result = body();
 
@@ -1276,6 +1303,7 @@ self.props = {
     return then(result);
   }
 
+  var gd = new GoogleDrive(self.props);
   var HTML = "<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content=\"IE=edge\"><meta name=viewport content=\"width=device-width,initial-scale=1\"><title>".concat(self.props.title, "</title><link href=\"/~_~_gdindex/resources/css/app.css\" rel=stylesheet></head><body><script>window.props = { title: '").concat(self.props.title, "', defaultRootId: '").concat(self.props.defaultRootId, "', api: location.protocol + '//' + location.host }</script><div id=app></div><script src=\"/~_~_gdindex/resources/js/app.js\"></script></body></html>");
 
   function unauthorized() {
