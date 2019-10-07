@@ -5,6 +5,12 @@ export default {
 	modifiedTime: '修改时间',
 	fileSize: '文件大小',
 	mainDrive: '主要硬盘',
-	search: '搜索',
+	search: '搜寻',
+	fileUpload: '文件上传',
+	urlUpload: '从网址上传',
+	upload: '上传',
+	fileToUpload: '要上传的文件',
+	uploading: '上傳中...',
+	serverProcessing: '服务器正在处里文件',
 	$vuetify
 }

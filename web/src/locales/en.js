@@ -3,5 +3,11 @@ export default {
 	modifiedTime: 'Modified Time',
 	fileSize: 'File Size',
 	mainDrive: 'Main Drive',
-	search: 'Search'
+	search: 'Search',
+	fileUpload: 'File Upload',
+	urlUpload: 'Upload from url',
+	upload: 'Upload',
+	fileToUpload: 'File to upload',
+	uploading: 'Uploading...',
+	serverProcessing: 'Server is processing the file now'
 }

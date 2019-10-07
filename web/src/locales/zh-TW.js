@@ -6,5 +6,11 @@ export default {
 	fileSize: '檔案大小',
 	mainDrive: '主要硬碟',
 	search: '搜尋',
+	fileUpload: '檔案上傳',
+	urlUpload: '從網址上傳',
+	upload: '上傳',
+	fileToUpload: '要上傳的檔案',
+	uploading: '上傳中...',
+	serverProcessing: '伺服器正在處裡檔案',
 	$vuetify
 }

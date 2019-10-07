@@ -1,5 +1,33 @@
 <template>
 	<v-container fluid>
+		<portal to="navbar">
+			<v-toolbar-items>
+				<template v-for="seg in pathSegments">
+					<v-icon :key="seg.path + '-icon'">mdi-menu-right</v-icon>
+					<v-btn
+						text
+						class="text-none"
+						:key="seg.path + '-btn'"
+						@click="goPath(seg.path)"
+						>{{ seg.name }}</v-btn
+					>
+				</template>
+			</v-toolbar-items>
+		</portal>
+		<FileUploadDialog
+			v-model="showUploadDialog"
+			:uploadUrl="uploadUrl"
+			@uploaded="uploadComplete"
+		/>
+		<v-row justify="center" v-if="uploadEnabled">
+			<v-col md="8" lg="6" class="pt-0 pb-0">
+				<v-btn
+					v-text="$t('upload')"
+					color="primary"
+					@click="showUploadDialog = true"
+				></v-btn>
+			</v-col>
+		</v-row>
 		<v-row justify="center">
 			<v-col md="8" lg="6">
 				<v-card
@@ -8,65 +36,41 @@
 					tile
 					:loading="loading"
 				>
-					<portal to="navbar">
-						<v-toolbar-items>
-							<template v-for="seg in pathSegments">
-								<v-icon :key="seg.path + '-icon'"
-									>mdi-menu-right</v-icon
-								>
-								<v-btn
-									text
-									class="text-none"
-									:key="seg.path + '-btn'"
-									@click="goPath(seg.path)"
-									>{{ seg.name }}</v-btn
-								>
-							</template>
-						</v-toolbar-items>
-					</portal>
-					<v-row>
-						<v-col>
-							<v-list-item
-								v-for="item in list"
-								:key="item.id"
-								@click.prevent="
-									goPath(item.resourcePath, item.opener)
-								"
-								class="pl-0"
+					<v-list-item
+						v-for="item in list"
+						:key="item.id"
+						@click.prevent="goPath(item.resourcePath, item.opener)"
+						class="pl-0"
+						tag="a"
+						:href="getFileUrl(item.resourcePath)"
+					>
+						<v-list-item-avatar class="ma-0">
+							<v-icon>{{ item.icon }}</v-icon>
+						</v-list-item-avatar>
+						<v-list-item-content class="py-2">
+							<v-list-item-title
+								v-text="item.fileName"
+							></v-list-item-title>
+							<v-list-item-subtitle
+								v-if="!item.isFolder"
+								v-text="item.fileSize"
+							></v-list-item-subtitle>
+						</v-list-item-content>
+						<v-list-item-action>
+							<v-btn
+								icon
+								v-if="!item.isFolder && !item.isGoogleFile"
 								tag="a"
 								:href="getFileUrl(item.resourcePath)"
+								download
+								@click.stop
 							>
-								<v-list-item-avatar class="ma-0">
-									<v-icon>{{ item.icon }}</v-icon>
-								</v-list-item-avatar>
-								<v-list-item-content class="py-2">
-									<v-list-item-title
-										v-text="item.fileName"
-									></v-list-item-title>
-									<v-list-item-subtitle
-										v-if="!item.isFolder"
-										v-text="item.fileSize"
-									></v-list-item-subtitle>
-								</v-list-item-content>
-								<v-list-item-action>
-									<v-btn
-										icon
-										v-if="
-											!item.isFolder && !item.isGoogleFile
-										"
-										tag="a"
-										:href="getFileUrl(item.resourcePath)"
-										download
-										@click.stop
-									>
-										<v-icon color="black">
-											mdi-file-download
-										</v-icon>
-									</v-btn>
-								</v-list-item-action>
-							</v-list-item>
-						</v-col>
-					</v-row>
+								<v-icon color="black">
+									mdi-file-download
+								</v-icon>
+							</v-btn>
+						</v-list-item-action>
+					</v-list-item>
 				</v-card>
 			</v-col>
 		</v-row>
@@ -80,6 +84,7 @@ import nodePath from 'path'
 import api from '../api'
 import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
+import FileUploadDialog from './FileUploadDialog'
 
 const SUPPORTED_TYPES = {
 	'application/epub+zip': 'epub',
@@ -148,7 +153,9 @@ export default {
 					class: 'hidden-sm-and-down'
 				}
 			],
-			renderStart: null
+			renderStart: null,
+			uploadEnabled: window.props.upload,
+			showUploadDialog: false
 		}
 	},
 	computed: {
@@ -168,6 +175,14 @@ export default {
 				})
 			}
 			return ar
+		},
+		uploadUrl() {
+			const u = new URL(this.path, window.props.api)
+			u.searchParams.set(
+				'rootId',
+				this.$route.query.rootId || window.props.defaultRootId
+			)
+			return u.href
 		}
 	},
 	methods: {
@@ -286,6 +301,10 @@ export default {
 					location.href = u
 				}
 			}
+		},
+		uploadComplete() {
+			this.showUploadDialog = false
+			this.renderPath(this.path, this.$route.query.rootId)
 		}
 	},
 	created() {
@@ -300,6 +319,9 @@ export default {
 		if (this.handlePath('/' + fullyEncoded, to.query)) {
 			next()
 		}
+	},
+	components: {
+		FileUploadDialog
 	}
 }
 </script>
