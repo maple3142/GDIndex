@@ -96,11 +96,18 @@ async function onPut(request) {
 			status: 405
 		})
 	}
+	const url = request.searchParams.get('url')
+	let fileBody
+	if (url) {
+		fileBody = (await fetch(url)).body
+	} else {
+		fileBody = request.body
+	}
 	const tok = path.split('/')
 	const name = tok.pop()
 	const parent = tok.join('/')
 	const rootId = request.searchParams.get('rootId') || self.props.defaultRootId
-	return new Response(JSON.stringify(await gd.uploadByPath(parent, name, request.body, rootId)), {
+	return new Response(JSON.stringify(await gd.uploadByPath(parent, name, fileBody, rootId)), {
 		headers: {
 			'Content-Type': 'application/json'
 		}

@@ -1172,20 +1172,40 @@ self.props = {
       });
     }
 
-    var tok = path.split('/');
-    var name = tok.pop();
-    var parent = tok.join('/');
-    var rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
-    return _await$1(gd.uploadByPath(parent, name, request.body, rootId), function (_gd$uploadByPath) {
-      return new Response(JSON.stringify(_gd$uploadByPath), {
-        headers: {
-          'Content-Type': 'application/json'
-        }
+    var url = request.searchParams.get('url');
+    var fileBody;
+    return _invoke(function () {
+      if (url) {
+        return _await$1(fetch(url), function (_fetch) {
+          fileBody = _fetch.body;
+        });
+      } else {
+        fileBody = request.body;
+      }
+    }, function () {
+      var tok = path.split('/');
+      var name = tok.pop();
+      var parent = tok.join('/');
+      var rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
+      return _await$1(gd.uploadByPath(parent, name, fileBody, rootId), function (_gd$uploadByPath) {
+        return new Response(JSON.stringify(_gd$uploadByPath), {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
       });
     });
   });
 
-  function _empty() {}
+  function _invoke(body, then) {
+    var result = body();
+
+    if (result && result.then) {
+      return result.then(then);
+    }
+
+    return then(result);
+  }
 
   var onPost = _async(function (request) {
     var path = request.pathname;
@@ -1228,13 +1248,7 @@ self.props = {
     }
   });
 
-  function _invokeIgnored(body) {
-    var result = body();
-
-    if (result && result.then) {
-      return result.then(_empty);
-    }
-  }
+  function _empty() {}
 
   var onGet = _async(function (request) {
     var path = request.pathname;
@@ -1293,14 +1307,12 @@ self.props = {
     }
   });
 
-  function _invoke(body, then) {
+  function _invokeIgnored(body) {
     var result = body();
 
     if (result && result.then) {
-      return result.then(then);
+      return result.then(_empty);
     }
-
-    return then(result);
   }
 
   var gd = new GoogleDrive(self.props);
