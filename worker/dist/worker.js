@@ -1081,7 +1081,8 @@ self.props = {
         status: 200,
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Authorization'
+          'Access-Control-Allow-Headers': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, HEAD, OPTIONS'
         }
       });
 
