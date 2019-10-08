@@ -14,7 +14,7 @@ self.props = {
 	client_id: '202264815644.apps.googleusercontent.com',
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
 	refresh_token: '',
-	enable_basic_auth: false,
+	auth: false,
 	user: '',
 	pass: '',
 	upload: false
