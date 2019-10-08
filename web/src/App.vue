@@ -66,7 +66,7 @@ export default {
 	},
 	computed: {
 		currentDrive() {
-			const id = this.$route.query.rootId || window.props.defaultRootId
+			const id = this.$route.query.rootId || window.props.default_root_id
 			return this.drives.find(d => d.value === id)
 		}
 	},
@@ -95,7 +95,7 @@ export default {
 	methods: {
 		changeDrive(drive) {
 			const rootId =
-				drive !== window.props.defaultRootId ? drive : undefined
+				drive !== window.props.default_root_id ? drive : undefined
 			const dest = { path: '/', query: { rootId } }
 			if (
 				dest.path === this.$route.path &&

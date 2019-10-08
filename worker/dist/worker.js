@@ -1,6 +1,6 @@
 self.props = {
 	title: 'GDIndex',
-	defaultRootId: 'root',
+	default_root_id: 'root',
 	client_id: '202264815644.apps.googleusercontent.com',
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
 	refresh_token: '',
@@ -420,13 +420,13 @@ self.props = {
   }
 
   const gd = new GoogleDrive(self.props);
-  const HTML = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${self.props.title}</title><link href="/~_~_gdindex/resources/css/app.css" rel=stylesheet></head><body><script>window.props = { title: '${self.props.title}', defaultRootId: '${self.props.defaultRootId}', api: location.protocol + '//' + location.host, upload: ${self.props.upload} }<\/script><div id=app></div><script src="/~_~_gdindex/resources/js/app.js"><\/script></body></html>`;
+  const HTML = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>${self.props.title}</title><link href="/~_~_gdindex/resources/css/app.css" rel=stylesheet></head><body><script>window.props = { title: '${self.props.title}', default_root_id: '${self.props.default_root_id}', api: location.protocol + '//' + location.host, upload: ${self.props.upload} }<\/script><div id=app></div><script src="/~_~_gdindex/resources/js/app.js"><\/script></body></html>`;
 
   async function onGet(request) {
     let {
       pathname: path
     } = request;
-    const rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
+    const rootId = request.searchParams.get('rootId') || self.props.default_root_id;
 
     if (path.startsWith('/~_~_gdindex/resources/')) {
       const remain = path.replace('/~_~_gdindex/resources/', '');
@@ -481,7 +481,7 @@ self.props = {
     let {
       pathname: path
     } = request;
-    const rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
+    const rootId = request.searchParams.get('rootId') || self.props.default_root_id;
 
     if (path.substr(-1) === '/') {
       return new Response(JSON.stringify((await gd.listFolderByPath(path, rootId))), {
@@ -551,7 +551,7 @@ self.props = {
     const tok = path.split('/');
     const name = tok.pop();
     const parent = tok.join('/');
-    const rootId = request.searchParams.get('rootId') || self.props.defaultRootId;
+    const rootId = request.searchParams.get('rootId') || self.props.default_root_id;
     return new Response(JSON.stringify((await gd.uploadByPath(parent, name, fileBody, rootId))), {
       headers: {
         'Content-Type': 'application/json'

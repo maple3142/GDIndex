@@ -180,7 +180,7 @@ export default {
 			const u = new URL(this.path, window.props.api)
 			u.searchParams.set(
 				'rootId',
-				this.$route.query.rootId || window.props.defaultRootId
+				this.$route.query.rootId || window.props.default_root_id
 			)
 			return u.href
 		}
@@ -220,7 +220,7 @@ export default {
 			let renderStart = (this.renderStart = Date.now()) // Withous this, when user regret navigating a big folder, it will have some conflict.
 			this.loading = true
 			if (!rootId) {
-				rootId = window.props.defaultRootId
+				rootId = window.props.default_root_id
 			}
 			this.list = []
 			const { files } = await api
@@ -271,7 +271,7 @@ export default {
 				//if (Math.random() < 10) return
 				if (
 					query.rootId &&
-					query.rootId !== window.props.defaultRootId
+					query.rootId !== window.props.default_root_id
 				) {
 					u += '?rootId=' + query.rootId
 				}
