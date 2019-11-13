@@ -325,17 +325,38 @@ self.props = {
 
     async listFolder(id) {
       await this.initializeClient();
-      const resp = await this.client.get('files', {
-        qs: {
+
+      const getList = pageToken => {
+        const qs = {
           includeItemsFromAllDrives: true,
           supportsAllDrives: true,
           q: `'${id}' in parents and trashed = false`,
           orderBy: 'folder,name,modifiedTime desc',
-          fields: 'files(id, name, mimeType, size, modifiedTime)',
+          fields: 'files(id,name,mimeType,size,modifiedTime),nextPageToken',
           pageSize: 1000
+        };
+
+        if (pageToken) {
+          qs.pageToken = pageToken;
         }
-      }).json();
-      return resp;
+
+        return this.client.get('files', {
+          qs
+        }).json();
+      };
+
+      const files = [];
+      let pageToken;
+
+      do {
+        const resp = await getList(pageToken);
+        files.push(...resp.files);
+        pageToken = resp.pageToken;
+      } while (pageToken);
+
+      return {
+        files
+      };
     }
 
     async listFolderByPath(path, rootId = 'root') {

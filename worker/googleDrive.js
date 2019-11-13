@@ -68,19 +68,33 @@ class GoogleDrive {
 	}
 	async listFolder(id) {
 		await this.initializeClient()
-		const resp = await this.client
-			.get('files', {
-				qs: {
-					includeItemsFromAllDrives: true,
-					supportsAllDrives: true,
-					q: `'${id}' in parents and trashed = false`,
-					orderBy: 'folder,name,modifiedTime desc',
-					fields: 'files(id, name, mimeType, size, modifiedTime)',
-					pageSize: 1000
-				}
-			})
-			.json()
-		return resp
+		const getList = pageToken => {
+			const qs = {
+				includeItemsFromAllDrives: true,
+				supportsAllDrives: true,
+				q: `'${id}' in parents and trashed = false`,
+				orderBy: 'folder,name,modifiedTime desc',
+				fields:
+					'files(id,name,mimeType,size,modifiedTime),nextPageToken',
+				pageSize: 1000
+			}
+			if (pageToken) {
+				qs.pageToken = pageToken
+			}
+			return this.client
+				.get('files', {
+					qs
+				})
+				.json()
+		}
+		const files = []
+		let pageToken
+		do {
+			const resp = await getList(pageToken)
+			files.push(...resp.files)
+			pageToken = resp.pageToken
+		} while (pageToken)
+		return { files }
 	}
 	async listFolderByPath(path, rootId = 'root') {
 		const id = await this.getId(path, rootId)
@@ -120,16 +134,19 @@ class GoogleDrive {
 	}
 	async upload(parentId, name, file) {
 		await this.initializeClient()
-		const createResp = await this.client.post('https://www.googleapis.com/upload/drive/v3/files', {
-			qs: {
-				uploadType: 'resumable',
-				supportsAllDrives: true
-			},
-			json: {
-				name,
-				parents: [parentId]
+		const createResp = await this.client.post(
+			'https://www.googleapis.com/upload/drive/v3/files',
+			{
+				qs: {
+					uploadType: 'resumable',
+					supportsAllDrives: true
+				},
+				json: {
+					name,
+					parents: [parentId]
+				}
 			}
-		})
+		)
 		const putUrl = createResp.headers.get('Location')
 		return this.client
 			.put(putUrl, {
