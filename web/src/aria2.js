@@ -17,7 +17,7 @@ function setStringToLocalStorage(key, value) {
 }
 
 const aria2Support = {
-	rawInstance: null,
+	aria2: null,
 	getRpcHost: function() {
 		return getStringFromLocalStorage(KEY_ARIA2_RPC_HOST)
 	},
@@ -57,7 +57,7 @@ const aria2Support = {
 		return setStringToLocalStorage(KEY_ARIA2_DOWNLOAD_PATH, path)
 	},
 	prepare: function() {
-		if (this.rawInstance) {
+		if (this.aria2) {
 			return
 		}
 
@@ -71,14 +71,14 @@ const aria2Support = {
 		this.aria2 = new Aria2(options)
 	},
 	test: async function() {
-		if (!this.rawInstance) {
+		if (!this.aria2) {
 			this.prepare()
 		}
 
 		return await this.aria2.call('getVersion')
 	},
 	addDownload: async function(url, downloadPath) {
-		if (!this.rawInstance) {
+		if (!this.aria2) {
 			this.prepare()
 		}
 		const option = {
