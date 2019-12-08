@@ -351,7 +351,7 @@ self.props = {
       do {
         const resp = await getList(pageToken);
         files.push(...resp.files);
-        pageToken = resp.pageToken;
+        pageToken = resp.nextPageToken;
       } while (pageToken);
 
       return {
