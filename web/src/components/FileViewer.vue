@@ -14,21 +14,6 @@
 				</template>
 			</v-toolbar-items>
 		</portal>
-		<!--<FileUploadDialog
-			v-model="showUploadDialog"
-			:uploadUrl="uploadUrl"
-			@uploaded="uploadComplete"
-		/>
-		<v-row justify="center" v-if="uploadEnabled">
-			<v-col md="8" lg="6" class="pt-0 pb-0">
-				<v-btn
-					v-text="$t('upload')"
-					color="primary"
-					@click="showUploadDialog = true"
-				></v-btn>
-			</v-col>
-		</v-row>-->
-		<v-row justify="center">-->
 		<v-row>
 			<v-col md="4" lg="6">
 				<v-card
@@ -40,12 +25,11 @@
 					<v-list-item
 						v-for="item in list"
 						:key="item.id"
-						@click.prevent="goPath(item.resourcePath, item.opener)"
+						@click.prevent="goPath(item.resourcePath, item.opener, item.id)"
 						class="pl-0"
 						tag="a"
 						:href="getFileUrl(item.resourcePath)"
 					>
-					{{item}}
 						<v-list-item-avatar class="ma-0">
 							<v-icon>{{ item.icon }}</v-icon>
 						</v-list-item-avatar>
@@ -192,11 +176,15 @@ export default {
 		}
 	},
 	methods: {
-		goPath(path, opener) {
+		goPath(path, opener, id) {
 			const query = {
 				rootId: this.$route.query.rootId
 			}
 			if (opener) {
+				if (opener === 'iframe') {
+					this.link = 'https://docs.google.com/viewer?srcid=' + id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
+					return
+				}
 				query.opener = opener
 			}
 			this.$router.push({
@@ -249,6 +237,7 @@ export default {
 				const resourcePath =
 					nodeUrl.resolve(path, f.name) + (isFolder ? '/' : '')
 				const o = {
+					id: f.id,
 					fileName: f.name,
 					modifiedTime: format(
 						new Date(f.modifiedTime),
@@ -263,6 +252,9 @@ export default {
 				}
 				if (f.mimeType in SUPPORTED_TYPES) {
 					o.opener = SUPPORTED_TYPES[f.mimeType]
+				}
+				if (isGoogleFile) {
+					o.opener = 'iframe'
 				}
 				return o
 			})
