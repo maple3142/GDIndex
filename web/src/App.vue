@@ -5,8 +5,7 @@
 				<router-link
 					:to="{ path: '/', query: { rootId: $route.query.rootId } }"
 					tag="span"
-					>{{ title }}</router-link
-				>
+					>Baby-club</router-link>
 			</v-toolbar-title>
 			<!--<v-toolbar-items>
 				<v-menu offset-y v-if="drives.length">

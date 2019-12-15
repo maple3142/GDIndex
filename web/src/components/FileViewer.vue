@@ -14,7 +14,7 @@
 				</template>
 			</v-toolbar-items>
 		</portal>
-		<FileUploadDialog
+		<!--<FileUploadDialog
 			v-model="showUploadDialog"
 			:uploadUrl="uploadUrl"
 			@uploaded="uploadComplete"
@@ -27,9 +27,10 @@
 					@click="showUploadDialog = true"
 				></v-btn>
 			</v-col>
-		</v-row>
-		<v-row justify="center">
-			<v-col md="8" lg="6">
+		</v-row>-->
+		<v-row justify="center">-->
+		<v-row>
+			<v-col md="4" lg="6">
 				<v-card
 					class="mx-auto"
 					min-height="400px"
@@ -44,6 +45,7 @@
 						tag="a"
 						:href="getFileUrl(item.resourcePath)"
 					>
+					{{item}}
 						<v-list-item-avatar class="ma-0">
 							<v-icon>{{ item.icon }}</v-icon>
 						</v-list-item-avatar>
@@ -72,6 +74,9 @@
 						</v-list-item-action>
 					</v-list-item>
 				</v-card>
+			</v-col>
+			<v-col md="8" lg="6">
+				<iframe :src="link" width="100%" height="100%"></iframe>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -132,6 +137,7 @@ const ICON_NAME = {
 export default {
 	data() {
 		return {
+			link: '',
 			list: [],
 			loading: false,
 			headers: [

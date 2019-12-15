@@ -103,3 +103,4 @@ public
 worker/script.js
 worker/wrangler.toml
 **/node_modules/
+web/package-lock.json
