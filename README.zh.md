@@ -17,6 +17,7 @@
 -   不支持目录加密(.password)
 -   支持 Http Basic Auth
 -   无需修改程序，即可接入多个云端硬盘(个人、团队)
+-   支持导出 Aria2 下载
 
 ## 使用教学
 
@@ -33,3 +34,18 @@
 5. 复制 [worker/dist/worker.js](worker/dist/worker.js) 的内容到 CloudFlare Workers
 6. 在脚本顶端填上 `refresh_token`, `root_folder_id` 以及其他的选项
 7. 部署!
+
+### 启用 Aria2 下载
+
+1. 在 `worker.js` 中添加配置 `download_aria2: true`：
+    ```
+	default_root_id: '...',
+	client_id: '...',
+	client_secret: '...',
+	refresh_token: '...',
+    ...
+	download_aria2: true
+    ```
+2. 重新部署，此时你应该可以在文件列表上方看到“使用 Aria2 下载”以及“Aria2 RPC 配置”两个按钮
+3. 在“Aria2 RPC 配置”中填写 Aria2 RPC 连接信息
+4. 前往你要下载的文件夹，点击“使用 Aria2 下载”，开始添加下载任务

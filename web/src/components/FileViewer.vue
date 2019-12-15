@@ -19,13 +19,16 @@
 			:uploadUrl="uploadUrl"
 			@uploaded="uploadComplete"
 		/>
-		<v-row justify="center" v-if="uploadEnabled">
-			<v-col md="8" lg="6" class="pt-0 pb-0">
+		<v-row justify="center">
+			<v-col md="8" lg="6" class="pt-0 pb-0" id="actions">
 				<v-btn
+					v-if="uploadEnabled"
 					v-text="$t('upload')"
 					color="primary"
 					@click="showUploadDialog = true"
 				></v-btn>
+				<Aria2DownloadDialog :path="path" :rootId="rootId" />
+				<Aria2SettingsDialog />
 			</v-col>
 		</v-row>
 		<v-row justify="center">
@@ -85,6 +88,8 @@ import api from '../api'
 import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 import FileUploadDialog from './FileUploadDialog'
+import Aria2DownloadDialog from './Aria2DownloadDialog'
+import Aria2SettingsDialog from './Aria2SettingsDialog'
 
 const SUPPORTED_TYPES = {
 	'application/epub+zip': 'epub',
@@ -153,6 +158,7 @@ export default {
 					class: 'hidden-sm-and-down'
 				}
 			],
+			rootId: '',
 			renderStart: null,
 			uploadEnabled: window.props.upload,
 			showUploadDialog: false
@@ -307,6 +313,10 @@ export default {
 		}
 	},
 	created() {
+		this.rootId = this.$route.query.rootId
+		if (!this.rootId) {
+			this.rootId = window.props.default_root_id
+		}
 		this.handlePath(this.path, this.$route.query)
 	},
 	beforeRouteUpdate(to, from, next) {
@@ -320,7 +330,9 @@ export default {
 		}
 	},
 	components: {
-		FileUploadDialog
+		FileUploadDialog,
+		Aria2DownloadDialog,
+		Aria2SettingsDialog
 	}
 }
 </script>
@@ -356,5 +368,9 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+#actions > button {
+	margin-right: 10px;
 }
 </style>
