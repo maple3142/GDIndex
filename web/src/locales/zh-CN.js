@@ -14,5 +14,13 @@ export default {
 	serverProcessing: '服务器正在处理文件',
 	bigFileUploadWarning:
 		'由于 CloudFlare Workers 的限制，上传大档案可能会随机失败',
+	close: '关闭',
+	exportUrl: '导出下载链接',
+	exportUrlIncludeSubFolders: '包含子文件夹',
+	exportUrlIncludeFileName: '导出文件名',
+	exportUrlFetchingFiles: '获取文件中，还剩 {remainingFolderCount} 个文件夹',
+	exportUrlFetchFileFailed: '获取文件失败，原因：{reason}',
+	exportUrlStats:
+		'{folderCount} 个文件夹，{fileCount} 个文件，总大小 {totalDownloadSize}',
 	$vuetify
 }

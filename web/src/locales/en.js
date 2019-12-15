@@ -11,5 +11,14 @@ export default {
 	uploading: 'Uploading...',
 	serverProcessing: 'Server is processing the file now',
 	bigFileUploadWarning:
-		"Due to CloudFlare Workers' limitation, uploading bigfiles may randomly failed."
+		"Due to CloudFlare Workers' limitation, uploading bigfiles may randomly failed.",
+	close: 'Close',
+	exportUrl: 'Export Download Urls',
+	exportUrlIncludeSubFolders: 'Include sub-folders',
+	exportUrlIncludeFileName: 'Include filenames',
+	exportUrlFetchingFiles:
+		'Fetching files, remaining {remainingFolderCount} folders',
+	exportUrlFetchFileFailed: 'Fetch failed, reason: {reason}',
+	exportUrlStats:
+		'{fileCount} files in {folderCount} folders, total size: {totalDownloadSize}'
 }
