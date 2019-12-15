@@ -21,6 +21,7 @@
 -   No directory-level password protection(.password)
 -   Support Http Basic Auth
 -   Support multiple drives(personal, team) without changing server's code
+-   Support exporting file urls
 
 ## Usage
 
@@ -37,3 +38,11 @@ Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch
 5. Copy the content of [worker/dist/worker.js](worker/dist/worker.js) to CloudFlare Workers.
 6. Fill `refresh_token`, `root_folder_id` and other options on the top of the script.
 7. Deploy!
+
+### Enabling file url export
+
+1. Add following config to your `worker.js`:
+    ```
+    export_url: true
+    ```
+2. Redeploy

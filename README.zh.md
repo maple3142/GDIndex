@@ -17,6 +17,7 @@
 -   不支持目录加密(.password)
 -   支持 Http Basic Auth
 -   无需修改程序，即可接入多个云端硬盘(个人、团队)
+-   支持导出文件下载链接
 
 ## 使用教学
 
@@ -33,3 +34,11 @@
 5. 复制 [worker/dist/worker.js](worker/dist/worker.js) 的内容到 CloudFlare Workers
 6. 在脚本顶端填上 `refresh_token`, `root_folder_id` 以及其他的选项
 7. 部署!
+
+### 启用文件下载链接导出
+
+1. 在 `worker.js` 中添加:
+    ```
+    export_url: true
+    ```
+2. 重新部署即可
