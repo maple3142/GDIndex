@@ -37,3 +37,22 @@ Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch
 5. Copy the content of [worker/dist/worker.js](worker/dist/worker.js) to CloudFlare Workers.
 6. Fill `refresh_token`, `root_folder_id` and other options on the top of the script.
 7. Deploy!
+
+### Enabling file copy on forbidden
+
+Google Drive limited each users' file sharing bandwidth(about 750GB per day). If you try pulling a shared file from who exceed this limit, you will receive a `403 - forbidden` error. Copying file to your may solve this problem, but it hurts because you can only copy a file once a time.
+
+That's why "Copy on forbidden" comes in.
+
+1. Create a folder, which will be used to store your copied files, crawl its id from network requests(normally you can get it from Developer Tools)
+2. Add following config to your `worker.js`:
+
+```
+  ...
+  copy_on_forbidden: true,
+  copy_parent_id: 'YOUR_COPY_FOLDER_ID' // replace YOUR_COPY_FOLDER_ID to your copy folder's ID
+```
+
+3. Just do normal download, if this file exceed limits, worker will make a copy and return copied one to you. This process is transparent so you won't need to deal other things.
+
+Note: Be sure to delete all you copied files after a while, as more files get copied, it will consumer more space on you drive. Besides, this feature will NOT detect existing copies, multiple downloads will leads multiple copies.
