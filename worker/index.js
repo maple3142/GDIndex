@@ -102,9 +102,14 @@ async function onPut(request) {
 		const u = new URL(url)
 		const Referer = u.href
 		const Origin = u.protocol + '//' + u.host
-		fileBody = (await fetch(url, {
-			headers: { Referer, Origin }
-		})).body
+		fileBody = (
+			await fetch(url, {
+				headers: {
+					Referer,
+					Origin
+				}
+			})
+		).body
 	} else {
 		fileBody = request.body
 	}
@@ -118,6 +123,7 @@ async function onPut(request) {
 		}
 	})
 }
+
 function unauthorized() {
 	return new Response('Unauthorized', {
 		headers: {
@@ -127,6 +133,7 @@ function unauthorized() {
 		status: 401
 	})
 }
+
 function parseBasicAuth(auth) {
 	try {
 		return atob(auth.split(' ').pop()).split(':')
@@ -134,6 +141,7 @@ function parseBasicAuth(auth) {
 		return []
 	}
 }
+
 function doBasicAuth(request) {
 	const auth = request.headers.get('Authorization')
 	if (!auth || !/^Basic [A-Za-z0-9._~+/-]+=*$/i.test(auth)) {
