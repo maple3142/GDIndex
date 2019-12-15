@@ -15,12 +15,12 @@
 			</v-toolbar-items>
 		</portal>
 		<v-row>
-			<v-col md="4" lg="6">
+			<v-col md="4" lg="6" style="height:100%">
 				<v-card
 					class="mx-auto"
 					min-height="400px"
 					tile
-					:loading="loading"
+					:loading="Загрузка"
 				>
 					<v-list-item
 						v-for="item in list"
@@ -59,7 +59,7 @@
 					</v-list-item>
 				</v-card>
 			</v-col>
-			<v-col md="8" lg="6">
+			<v-col md="8" lg="6" style="height:100%">
 				<iframe :src="link" width="100%" height="100%"></iframe>
 			</v-col>
 		</v-row>
