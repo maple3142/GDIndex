@@ -21,6 +21,7 @@
 -   No directory-level password protection(.password)
 -   Support Http Basic Auth
 -   Support multiple drives(personal, team) without changing server's code
+-   Support Aria2 download
 
 ## Usage
 
@@ -37,6 +38,21 @@ Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch
 5. Copy the content of [worker/dist/worker.js](worker/dist/worker.js) to CloudFlare Workers.
 6. Fill `refresh_token`, `root_folder_id` and other options on the top of the script.
 7. Deploy!
+
+### Enabling download with Aria2
+
+1. Add config `download_aria2: true` to your `worker.js`:
+    ```
+	default_root_id: '...',
+	client_id: '...',
+	client_secret: '...',
+	refresh_token: '...',
+    ...
+	download_aria2: true
+    ```
+2. Redeploy, now you should see "Download with Aria2" and "Aria2 RPC Settings" beyond file list
+3. Fill your aria2 connection info in "Aria2 RPC Settings"
+4. Go to where you want to download and click "Download with aria2", which will add downloads for you!
 
 ### Enabling file copy on forbidden
 
