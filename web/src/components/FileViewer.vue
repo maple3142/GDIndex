@@ -71,7 +71,7 @@
 				</v-card>
 			</v-col>
 			<v-col md="6" lg="8" sm="12" xs="12" style="max-height: 100vh;overflow: scroll;">
-				<iframe :src="link" width="100%" style="max-height: 100vh;"></iframe>
+				<iframe :src="link" width="100%" style="height: 100vh;"></iframe>
 			</v-col>
 		</v-row>
 	</v-container>
