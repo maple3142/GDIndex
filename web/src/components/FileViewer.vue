@@ -1,13 +1,15 @@
 <template>
 	<v-container fluid>
 		<portal to="left">
-			<v-btn
-				@click="toggleMenu"
-			>
-				<v-icon color="black">
-					mdi-menu-open 
-				</v-icon>
-			</v-btn>
+			<v-toolbar-items>
+				<v-btn
+					@click="toggleMenu"
+				>
+					<v-icon color="white">
+						mdi-menu-open 
+					</v-icon>
+				</v-btn>
+			</v-toolbar-items>
 		</portal>
 		<portal to="navbar">
 			<v-toolbar-items>

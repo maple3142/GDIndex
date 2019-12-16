@@ -2,7 +2,7 @@
 	<v-app>
 		<v-app-bar app color="primary" dark>
 			<portal-target name="left" slim />
-			<v-toolbar-title class="headline pointer mr-3 hidden-sm-and-down">
+			<v-toolbar-title class="headline pointer mr-3">
 				<router-link
 					:to="{ path: '/', query: { rootId: $route.query.rootId } }"
 					tag="span"
