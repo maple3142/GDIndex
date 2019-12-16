@@ -1,5 +1,14 @@
 <template>
 	<v-container fluid>
+		<portal to="left">
+			<v-btn
+				@click="toggleMenu"
+			>
+				<v-icon color="black">
+					mdi-menu-open 
+				</v-icon>
+			</v-btn>
+		</portal>
 		<portal to="navbar">
 			<v-toolbar-items>
 				<template v-for="seg in pathSegments">
@@ -15,7 +24,7 @@
 			</v-toolbar-items>
 		</portal>
 		<v-row>
-			<v-col md="4" lg="6" style="max-height: 100vh;overflow: scroll;">
+			<v-col md="6" lg="4" sm="12" v-show="showmenu" style="max-height: 100vh;overflow: scroll;">
 				<v-card
 					class="mx-auto"
 					min-height="400px"
@@ -59,7 +68,7 @@
 					</v-list-item>
 				</v-card>
 			</v-col>
-			<v-col md="8" lg="6" style="max-height: 100vh;overflow: scroll;">
+			<v-col md="6" lg="8" sm="12" style="max-height: 100vh;overflow: scroll;">
 				<iframe :src="link" width="100%" height="100%"></iframe>
 			</v-col>
 		</v-row>
@@ -121,6 +130,7 @@ const ICON_NAME = {
 export default {
 	data() {
 		return {
+			showmenu: true,
 			link: '',
 			list: [],
 			loading: false,
@@ -176,6 +186,9 @@ export default {
 		}
 	},
 	methods: {
+		toggleMenu() {
+			this.showmenu = !this.showmenu
+		},
 		goPath(path, opener, id) {
 			const query = {
 				rootId: this.$route.query.rootId
@@ -253,7 +266,7 @@ export default {
 				if (f.mimeType in SUPPORTED_TYPES) {
 					o.opener = SUPPORTED_TYPES[f.mimeType]
 				}
-				if (isGoogleFile) {
+				if (isGoogleFile && !isFolder) {
 					o.opener = 'iframe'
 				}
 				return o
