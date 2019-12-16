@@ -26,7 +26,7 @@
 			</v-toolbar-items>
 		</portal>
 		<v-row>
-			<v-col md="6" lg="4" sm="12" v-show="showmenu" style="max-height: 100vh;overflow: scroll;">
+			<v-col md="6" lg="4" sm="12" xs="12" v-show="showmenu" style="max-height: 100vh;overflow: scroll;">
 				<v-card
 					class="mx-auto"
 					min-height="400px"
@@ -70,8 +70,8 @@
 					</v-list-item>
 				</v-card>
 			</v-col>
-			<v-col md="6" lg="8" sm="12" style="max-height: 100vh;overflow: scroll;">
-				<iframe :src="link" width="100%" height="100%"></iframe>
+			<v-col md="6" lg="8" sm="12" xs="12" style="max-height: 100vh;overflow: scroll;">
+				<iframe :src="link" width="100%" style="max-height: 100vh;"></iframe>
 			</v-col>
 		</v-row>
 	</v-container>
