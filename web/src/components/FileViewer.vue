@@ -127,7 +127,7 @@ export default {
 	},
 	created() {
 		this.loading = true
-		api.get('https://storage.yandexcloud.net/voter/baby.json')
+		api.get('https://baby.fintech.workers.dev/baby.json')
 		.json().then((data) => {
 			this.items = data
 		})
