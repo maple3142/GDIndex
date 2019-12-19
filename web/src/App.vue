@@ -49,27 +49,13 @@ export default {
 				}))
 		if (!ok) return
 
-		const { drives } = await api.get('/~_~_gdindex/drives').json()
-		this.drives = [{ text: this.$t('mainDrive'), value: 'root' }].concat(
+		//const { drives } = await api.get('/~_~_gdindex/drives').json()
+		this.drives = [{ text: this.$t('mainDrive'), value: 'root' }]/*.concat(
 			drives.map(d => ({
 				value: d.id,
 				text: d.name
 			}))
-		)
-	},
-	methods: {
-		changeDrive(drive) {
-			const rootId =
-				drive !== window.props.default_root_id ? drive : undefined
-			const dest = { path: '/', query: { rootId } }
-			if (
-				dest.path === this.$route.path &&
-				dest.query.rootId === this.$route.query.rootId
-			) {
-				return // vue-router forbid going to same location
-			}
-			this.$router.push({ path: '/', query: { rootId } })
-		}
+		)*/
 	},
 	components: { LoginDialog }
 }
