@@ -119,7 +119,7 @@ export default {
 		goPath(item) {
 			if (item.file !== 'application/vnd.google-apps.folder') {
 				
-				this.link = 'https://docs.google.com/viewer?srcid=' + id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
+				this.link = 'https://docs.google.com/viewer?srcid=' + item.id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
 				return
 			}
 		},
