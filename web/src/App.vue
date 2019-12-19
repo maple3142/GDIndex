@@ -2,8 +2,8 @@
 	<v-app>
 		<v-app-bar app color="primary" dark>
 			<portal-target name="left" slim />
-			<v-toolbar-title class="headline pointer mr-3">
-				Baby-club
+			<v-toolbar-title class="headline pointer mr-3 ml-2">
+				Baby-club - база знаний
 			</v-toolbar-title>
 			<portal-target name="navbar" slim />
 		</v-app-bar>

@@ -18,27 +18,42 @@
 					class="mx-auto"
 					tile
 				>
-
-					<v-treeview
-				      v-model="tree"
-				      :items="items"
-				      activatable
-				      item-key="name"
-				      open-on-click
-				    >
-				      <template v-slot:prepend="{ item }">
-				      	<v-icon v-if="item.file === 'mdi-folder'">
-				          mdi-folder
-				        </v-icon>
-				        <v-icon v-else >
-				          {{ item.file }}
-				        </v-icon>
-				      </template>
-				      <template v-slot:label="{ item }">
-					      <a @click="goPath(item)" v-if="item.file !== 'mdi-folder'">{{ item.name }}</a>
-					      <div v-else>{{item.name}}</div>
-					  </template>
-				    </v-treeview>
+					<v-sheet class="pa-4 primary lighten-2">
+				        <v-text-field
+				          v-model="search"
+				          label="Поиск"
+				          dark
+				          flat
+				          solo-inverted
+				          hide-details
+				          clearable
+				          clear-icon="mdi-close-circle-outline"
+				        ></v-text-field>
+			        </v-sheet>
+			        <v-card-text>
+						<v-treeview
+					      v-model="tree"
+					      :items="items"
+					      activatable
+					      :search="search"
+					      item-key="name"
+					      open-on-click
+					      :openAll="openAll"
+					    >
+					      <template v-slot:prepend="{ item }">
+					      	<v-icon v-if="item.file === 'mdi-folder'">
+					          mdi-folder
+					        </v-icon>
+					        <v-icon v-else >
+					          {{ item.file }}
+					        </v-icon>
+					      </template>
+					      <template v-slot:label="{ item }">
+						      <a @click="goPath(item)" v-if="item.file !== 'mdi-folder'">{{ item.name }}</a>
+						      <div v-else>{{item.name}}</div>
+						  </template>
+					    </v-treeview>
+					</v-card-text>
 				</v-card>
 			</v-col>
 			<v-col style="min-width:50%; max-width:100%;max-height: calc(100vh - 100px);overflow: scroll;">
@@ -63,7 +78,9 @@ export default {
 			link: '',
 			tree: [],
 			items: [],
+			search: null,
 			loading: false,
+			openAll: false,
 			icons: {
 				'application/vnd.google-apps.folder': 'mdi-folder',
 				'application/epub+zip': 'mdi-book',
@@ -96,7 +113,8 @@ export default {
 				'application/vnd.google-apps.document': 'mdi-file-document-box',
 				'application/vnd.google-apps.spreadsheet': 'mdi-google-spreadsheet',
 				'application/vnd.google-apps.presentation': 'mdi-file-presentation-box',
-				'text/plain': 'mdi-file-document'
+				'text/plain': 'mdi-file-document',
+				'application/vnd.google-apps.folder': 'mdi-folder'
 			}
 		}
 	},
@@ -120,6 +138,9 @@ export default {
 		  if (obj.name === 'root') {
 		  	obj.name = 'Baby-club'
 		  }
+		  //if (obj.name === '') {
+		  //	obj.name = '<без названия>'	
+		  //}
 		  return obj
 		},
 		recursion(obj) {
@@ -129,15 +150,19 @@ export default {
 		   		o.children.forEach(v => {
 		      	this.recursion(v);
 		      });
+		   } else if (Array.isArray(o)) {
+		   		o.forEach(v => {
+		      	this.recursion(v);
+		      });
 		   }
 		   return o; // return final new object
-		}
+		},
 	},
 	created() {
 		this.loading = true
 		api.get('https://baby.fintech.workers.dev/baby.json')
 		.json().then((data) => {
-			this.items = [this.recursion(data)]
+			this.items = this.recursion(data)
 		})
 		this.loading = false
 	}
