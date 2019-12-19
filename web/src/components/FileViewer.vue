@@ -127,9 +127,10 @@ export default {
 	},
 	created() {
 		this.loading = true
-		this.items = await api
-			.get('https://storage.yandexcloud.net/voter/baby.json')
-			.json()
+		api.get('https://storage.yandexcloud.net/voter/baby.json')
+		.json().then((data) => {
+			this.items = data
+		})
 		this.loading = false
 	}
 }
