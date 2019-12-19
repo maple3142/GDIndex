@@ -12,7 +12,7 @@
 	</v-app>
 </template>
 <script>
-import api from './api'
+import xf from './xfetch'
 import LoginDialog from './components/LoginDialog.vue'
 import FileViewer from './components/FileViewer.vue'
 

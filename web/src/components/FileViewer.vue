@@ -11,49 +11,37 @@
 				</v-btn>
 			</v-toolbar-items>
 		</portal>
-		<portal to="navbar">
-			<v-toolbar-items>
-				<template v-for="seg in pathSegments">
-					<v-icon :key="seg.path + '-icon'">mdi-menu-right</v-icon>
-					<v-btn
-						text
-						class="text-none"
-						:key="seg.path + '-btn'"
-						@click="goPath(seg.path)"
-						>{{ seg.name }}</v-btn
-					>
-				</template>
-			</v-toolbar-items>
-		</portal>
-		<v-row>
-			<v-col md="6" lg="4" sm="12" xs="12" v-show="showmenu" style="max-height: 100vh;overflow: scroll;">
+		
+		<v-row  class="myright">
+			<v-col v-show="showmenu" style="min-width:50%; max-width:100%; max-height: calc(100vh - 100px);overflow: scroll;">
 				<v-card
 					class="mx-auto"
-					min-height="400px"
 					tile
-					:loading="Загрузка"
 				>
 
 					<v-treeview
 				      v-model="tree"
-				      :open="open"
 				      :items="items"
 				      activatable
 				      item-key="name"
 				      open-on-click
 				    >
-				      <template v-slot:prepend="{ item, open }">
-				        <v-icon v-if="item.file == 'application/vnd.google-apps.folder'">
-				          {{ open ? 'mdi-folder-open' : 'mdi-folder' }}
+				      <template v-slot:prepend="{ item }">
+				      	<v-icon v-if="item.file === 'mdi-folder'">
+				          mdi-folder
 				        </v-icon>
-				        <v-icon v-else @click="goPath(item)">
-				          {{ ICON_NAME[item.file] }}
+				        <v-icon v-else >
+				          {{ item.file }}
 				        </v-icon>
 				      </template>
+				      <template v-slot:label="{ item }">
+					      <a @click="goPath(item)" v-if="item.file !== 'mdi-folder'">{{ item.name }}</a>
+					      <div v-else>{{item.name}}</div>
+					  </template>
 				    </v-treeview>
 				</v-card>
 			</v-col>
-			<v-col md="6" lg="8" sm="12" xs="12" style="max-height: 100vh;overflow: scroll;">
+			<v-col style="min-width:50%; max-width:100%;max-height: calc(100vh - 100px);overflow: scroll;">
 				<iframe :src="link" width="100%" style="height: 100vh;"></iframe>
 			</v-col>
 		</v-row>
@@ -68,40 +56,6 @@ import api from '../api'
 import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 
-const ICON_NAME = {
-	'application/vnd.google-apps.folder': 'mdi-folder',
-	'application/epub+zip': 'mdi-book',
-	'application/vnd.android.package-archive': 'mdi-android',
-	'video/mp4': 'mdi-video',
-	'video/x-msvideo': 'mdi-video',
-	'video/x-flv': 'mdi-video',
-	'video/x-ms-wmv': 'mdi-video',
-	'video/webm': 'mdi-video',
-	'video/x-matroska': 'mdi-video',
-	'application/zip': 'mdi-archive',
-	'application/x-7z-compressed': 'mdi-archive',
-	'application/x-rar-compressed': 'mdi-archive',
-	'application/x-gzip': 'mdi-archive',
-	'image/png': 'mdi-file-image',
-	'image/jpeg': 'mdi-file-image',
-	'image/gif': 'mdi-file-image',
-	'image/bmp': 'mdi-file-image',
-	'application/msword': 'mdi-file-word',
-	'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-		'mdi-file-word',
-	'application/vnd.ms-excel': 'mdi-file-excel',
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-		'mdi-file-excel',
-	'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-		'mdi-file-powerpoint',
-	'application/vnd.ms-powerpoint': 'mdi-file-powerpoint',
-	'application/pdf': 'mdi-file-pdf',
-	'text/x-sql': 'mdi-database',
-	'application/vnd.google-apps.document': 'mdi-file-document-box',
-	'application/vnd.google-apps.spreadsheet': 'mdi-google-spreadsheet',
-	'application/vnd.google-apps.presentation': 'mdi-file-presentation-box',
-	'text/plain': 'mdi-file-document'
-}
 export default {
 	data() {
 		return {
@@ -109,7 +63,41 @@ export default {
 			link: '',
 			tree: [],
 			items: [],
-			loading: false
+			loading: false,
+			icons: {
+				'application/vnd.google-apps.folder': 'mdi-folder',
+				'application/epub+zip': 'mdi-book',
+				'application/vnd.android.package-archive': 'mdi-android',
+				'video/mp4': 'mdi-video',
+				'video/x-msvideo': 'mdi-video',
+				'video/x-flv': 'mdi-video',
+				'video/x-ms-wmv': 'mdi-video',
+				'video/webm': 'mdi-video',
+				'video/x-matroska': 'mdi-video',
+				'application/zip': 'mdi-archive',
+				'application/x-7z-compressed': 'mdi-archive',
+				'application/x-rar-compressed': 'mdi-archive',
+				'application/x-gzip': 'mdi-archive',
+				'image/png': 'mdi-file-image',
+				'image/jpeg': 'mdi-file-image',
+				'image/gif': 'mdi-file-image',
+				'image/bmp': 'mdi-file-image',
+				'application/msword': 'mdi-file-word',
+				'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+					'mdi-file-word',
+				'application/vnd.ms-excel': 'mdi-file-excel',
+				'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+					'mdi-file-excel',
+				'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+					'mdi-file-powerpoint',
+				'application/vnd.ms-powerpoint': 'mdi-file-powerpoint',
+				'application/pdf': 'mdi-file-pdf',
+				'text/x-sql': 'mdi-database',
+				'application/vnd.google-apps.document': 'mdi-file-document-box',
+				'application/vnd.google-apps.spreadsheet': 'mdi-google-spreadsheet',
+				'application/vnd.google-apps.presentation': 'mdi-file-presentation-box',
+				'text/plain': 'mdi-file-document'
+			}
 		}
 	},
 	methods: {
@@ -123,13 +111,33 @@ export default {
 				return
 			}
 		},
-		
+		checkAndChange(obj) { 
+		  if (this.icons[obj.file]) {
+		  	obj.file = this.icons[obj.file]
+		  } else {
+		  	obj.file = 'mdi-file-document'
+		  }
+		  if (obj.name === 'root') {
+		  	obj.name = 'Baby-club'
+		  }
+		  return obj
+		},
+		recursion(obj) {
+		   let o = obj;
+		   o = this.checkAndChange(o); 
+		   if (o.children) {
+		   		o.children.forEach(v => {
+		      	this.recursion(v);
+		      });
+		   }
+		   return o; // return final new object
+		}
 	},
 	created() {
 		this.loading = true
 		api.get('https://baby.fintech.workers.dev/baby.json')
 		.json().then((data) => {
-			this.items = data
+			this.items = [this.recursion(data)]
 		})
 		this.loading = false
 	}
@@ -167,5 +175,13 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+@media (max-width: 500px) {
+	.myright{
+		flex-direction:column;
+	}
+	.myright>*{
+	    flex-basis: auto;
+	}
 }
 </style>

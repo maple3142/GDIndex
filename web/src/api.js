@@ -5,6 +5,6 @@ if (localStorage.token) {
 	headers.Authorization = 'Basic ' + localStorage.token
 }
 export default xf.extend({
-	baseURI: window.props.api,
+	baseURI: 'https://baby.fintech.workers.dev/',
 	headers
 })
