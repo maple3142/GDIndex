@@ -120,7 +120,7 @@ export default {
 	},
 	computed: {
 		searchfilter() {
-			if (this.search.length > 3) {
+			if (this.search && this.search.length > 3) {
 				return this.search
 			} else {
 				return ''
