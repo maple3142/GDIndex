@@ -35,7 +35,7 @@
 					      v-model="tree"
 					      :items="items"
 					      activatable
-					      :search="search"
+					      :search="searchfilter"
 					      item-key="name"
 					      open-on-click
 					      :openAll="openAll"
@@ -118,6 +118,15 @@ export default {
 			}
 		}
 	},
+	computed: {
+		searchfilter() {
+			if (this.search.length > 3) {
+				return this.search
+			} else {
+				return ''
+			}
+		}
+	},
 	methods: {
 		toggleMenu() {
 			this.showmenu = !this.showmenu
@@ -126,7 +135,8 @@ export default {
 			if (item.file !== 'application/vnd.google-apps.folder') {
 				
 				this.link = 'https://docs.google.com/viewer?srcid=' + item.id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
-				return
+				this.toggleMenu();
+				return;
 			}
 		},
 		checkAndChange(obj) { 
