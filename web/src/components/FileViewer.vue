@@ -81,6 +81,7 @@ export default {
 			search: null,
 			loading: false,
 			openAll: false,
+			windowWidth: window.innerWidth,
 			icons: {
 				'application/vnd.google-apps.folder': 'mdi-folder',
 				'application/epub+zip': 'mdi-book',
@@ -135,7 +136,9 @@ export default {
 			if (item.file !== 'application/vnd.google-apps.folder') {
 				
 				this.link = 'https://docs.google.com/viewer?srcid=' + item.id + '&pid=explorer&efh=false&a=v&chrome=false&embedded=true';
-				this.toggleMenu();
+				if (this.windowWidth <= 500) {
+					this.toggleMenu();
+				}
 				return;
 			}
 		},
@@ -175,7 +178,12 @@ export default {
 			this.items = this.recursion(data)
 		})
 		this.loading = false
-	}
+	},
+	mounted() {
+        window.onresize = () => {
+            this.windowWidth = window.innerWidth
+        }
+    }
 }
 </script>
 <style scoped>
