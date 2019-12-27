@@ -160,10 +160,62 @@ export default {
 		   let o = obj;
 		   o = this.checkAndChange(o); 
 		   if (o.children) {
+		   		o.children.sort(function(a, b){
+		   			if (a.file == 'application/vnd.google-apps.folder') {
+		   				if (b.file == 'application/vnd.google-apps.folder') {
+		   					if (a.name < b.name) {
+		   						return -1;
+		   					} else {
+		   						return 1;
+		   					}
+		   				} else {
+		   					return -1
+		   				}
+		   			} else {
+		   				// a is file
+		   				if (b.file == 'application/vnd.google-apps.folder') {
+		   					// b is folder
+		   					return 1;
+		   				} else {
+		   					// both files
+		   					if (a.name < b.name) {
+		   						return -1;
+		   					} else {
+		   						return 1;
+		   					}
+		   				}
+		   			}
+				})
 		   		o.children.forEach(v => {
 		      	this.recursion(v);
 		      });
 		   } else if (Array.isArray(o)) {
+		   		o.sort(function(a, b){
+		   			if (a.file == 'application/vnd.google-apps.folder') {
+		   				if (b.file == 'application/vnd.google-apps.folder') {
+		   					if (a.name < b.name) {
+		   						return -1;
+		   					} else {
+		   						return 1;
+		   					}
+		   				} else {
+		   					return -1
+		   				}
+		   			} else {
+		   				// a is file
+		   				if (b.file == 'application/vnd.google-apps.folder') {
+		   					// b is folder
+		   					return 1;
+		   				} else {
+		   					// both files
+		   					if (a.name < b.name) {
+		   						return -1;
+		   					} else {
+		   						return 1;
+		   					}
+		   				}
+		   			}
+				})
 		   		o.forEach(v => {
 		      	this.recursion(v);
 		      });
