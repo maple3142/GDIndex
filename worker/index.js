@@ -59,6 +59,9 @@ async function onGet(request) {
 async function onPost(request) {
 	let { pathname: path } = request
 	const rootId = request.searchParams.get('rootId') || self.props.default_root_id
+	if (path.startsWith(`/${self.props.subdir}/`)) {
+		path = path.substr(self.props.subdir.length + 1)
+	}
 	if (path.substr(-1) === '/') {
 		return new Response(JSON.stringify(await gd.listFolderByPath(path, rootId)), {
 			headers: {
@@ -91,6 +94,9 @@ async function onPost(request) {
 }
 async function onPut(request) {
 	let { pathname: path } = request
+	if (path.startsWith(`/${self.props.subdir}/`)) {
+		path = path.substr(self.props.subdir.length + 1)
+	}
 	if (path.substr(-1) === '/') {
 		return new Response(null, {
 			headers: {
