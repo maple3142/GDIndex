@@ -50,7 +50,7 @@
 	</v-app>
 </template>
 <script>
-import api from './api'
+import api, { getSubDirPath } from './api'
 import LoginDialog from './components/LoginDialog.vue'
 
 export default {
@@ -84,7 +84,7 @@ export default {
 				}))
 		if (!ok) return
 
-		const { drives } = await api.get('/~_~_gdindex/drives').json()
+		const { drives } = await api.get(getSubDirPath('/~_~_gdindex/drives')).json()
 		this.drives = [{ text: this.$t('mainDrive'), value: 'root' }].concat(
 			drives.map(d => ({
 				value: d.id,

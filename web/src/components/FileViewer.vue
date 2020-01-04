@@ -81,7 +81,7 @@ import { format } from 'date-fns'
 import prettyBytes from 'pretty-bytes'
 import nodeUrl from 'url'
 import nodePath from 'path'
-import api from '../api'
+import api, { getSubDirPath } from '../api'
 import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 import FileUploadDialog from './FileUploadDialog'
@@ -160,7 +160,7 @@ export default {
 	},
 	computed: {
 		path() {
-			return '/' + this.$route.params.path
+			return getSubDirPath(this.$route.params.path)
 		},
 		pathSegments() {
 			const list = this.path
