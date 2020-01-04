@@ -3,7 +3,11 @@ import xf from './xfetch'
 const subdir = window.props.subdir
 
 export function getSubDirPath(path) {
-	if (typeof path === 'string') {
+	if (
+		typeof path === 'string' &&
+		!path.startsWith(`${subdir}/`) &&
+		!path.startsWith(`/${subdir}/`)
+	) {
 		if (path.startsWith('/')) {
 			return `/${subdir}${path}`
 		} else {
