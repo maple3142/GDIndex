@@ -7,10 +7,13 @@ const HTML = `<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-
 
 async function onGet(request) {
 	let { pathname: path } = request
-	const rootId = request.searchParams.get('rootId') || self.props.default_root_id
+	const rootId =
+		request.searchParams.get('rootId') || self.props.default_root_id
 	if (path.startsWith('/~_~_gdindex/resources/')) {
 		const remain = path.replace('/~_~_gdindex/resources/', '')
-		const r = await fetch(`https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/${remain}`)
+		const r = await fetch(
+			`https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/${remain}`
+		)
 		return new Response(r.body, {
 			headers: {
 				'Content-Type': mime.getType(remain) + '; charset=utf-8',
@@ -43,7 +46,10 @@ async function onGet(request) {
 		if (!isGoogleApps) {
 			const r = await gd.download(result.id, request.headers.get('Range'))
 			const h = new Headers(r.headers)
-			h.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			h.set(
+				'Content-Disposition',
+				`inline; filename*=UTF-8''${encodeURIComponent(result.name)}`
+			)
 			return new Response(r.body, {
 				status: r.status,
 				headers: h
@@ -55,13 +61,17 @@ async function onGet(request) {
 }
 async function onPost(request) {
 	let { pathname: path } = request
-	const rootId = request.searchParams.get('rootId') || self.props.default_root_id
+	const rootId =
+		request.searchParams.get('rootId') || self.props.default_root_id
 	if (path.substr(-1) === '/') {
-		return new Response(JSON.stringify(await gd.listFolderByPath(path, rootId)), {
-			headers: {
-				'Content-Type': 'application/json'
+		return new Response(
+			JSON.stringify(await gd.listFolderByPath(path, rootId)),
+			{
+				headers: {
+					'Content-Type': 'application/json'
+				}
 			}
-		})
+		)
 	} else {
 		const result = await gd.getMetaByPath(path, rootId)
 		if (!result) {
@@ -76,7 +86,10 @@ async function onPost(request) {
 		if (!isGoogleApps) {
 			const r = await gd.download(result.id, request.headers.get('Range'))
 			const h = new Headers(r.headers)
-			h.set('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(result.name)}`)
+			h.set(
+				'Content-Disposition',
+				`inline; filename*=UTF-8''${encodeURIComponent(result.name)}`
+			)
 			return new Response(r.body, {
 				status: r.status,
 				headers: h
@@ -102,21 +115,27 @@ async function onPut(request) {
 		const u = new URL(url)
 		const Referer = u.href
 		const Origin = u.protocol + '//' + u.host
-		fileBody = (await fetch(url, {
-			headers: { Referer, Origin }
-		})).body
+		fileBody = (
+			await fetch(url, {
+				headers: { Referer, Origin }
+			})
+		).body
 	} else {
 		fileBody = request.body
 	}
 	const tok = path.split('/')
 	const name = tok.pop()
 	const parent = tok.join('/')
-	const rootId = request.searchParams.get('rootId') || self.props.default_root_id
-	return new Response(JSON.stringify(await gd.uploadByPath(parent, name, fileBody, rootId)), {
-		headers: {
-			'Content-Type': 'application/json'
+	const rootId =
+		request.searchParams.get('rootId') || self.props.default_root_id
+	return new Response(
+		JSON.stringify(await gd.uploadByPath(parent, name, fileBody, rootId)),
+		{
+			headers: {
+				'Content-Type': 'application/json'
+			}
 		}
-	})
+	)
 }
 function unauthorized() {
 	return new Response('Unauthorized', {
@@ -142,6 +161,12 @@ function doBasicAuth(request) {
 	const [user, pass] = parseBasicAuth(auth)
 	return user === self.props.user && pass === self.props.pass
 }
+function encodePathComponent(path) {
+	return path
+		.split('/')
+		.map(encodeURIComponent)
+		.join('/')
+}
 async function handleRequest(request) {
 	if (request.method === 'OPTIONS')
 		// allow preflight request
@@ -162,6 +187,47 @@ async function handleRequest(request) {
 		.map(decodeURIComponent)
 		.map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
 		.join('/')
+
+	if (self.props.lite && request.pathname.endsWith('/')) {
+		// lite mode
+		const path = request.pathname
+		let parent = encodePathComponent(
+			path
+				.split('/')
+				.slice(0, -2)
+				.join('/') + '/'
+		)
+		const { files } = await gd.listFolderByPath(
+			path,
+			self.props.default_root_id
+		)
+		let fileht = ''
+		for (const f of files) {
+			const isf = f.mimeType === 'application/vnd.google-apps.folder'
+			const p = encodePathComponent(path + f.name)
+			fileht += `<li><a href="${p + (isf ? '/' : '')}">${f.name}</a></li>`
+		}
+		const ht = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>Index of ${path}</title>
+</head>
+<body>
+<h1>Index of ${path}</h1>
+<ul>
+<li><a href="${parent}"> Parent Directory</a></li>
+${fileht}
+</ul>
+</body>
+</html>`
+		return new Response(ht, {
+			status: 200,
+			headers: {
+				'Content-Type': 'text/html; charset=utf-8'
+			}
+		})
+	}
+
 	let resp
 	if (request.method === 'GET') resp = await onGet(request)
 	else if (request.method === 'POST') resp = await onPost(request)

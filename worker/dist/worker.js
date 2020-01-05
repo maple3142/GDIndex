@@ -7,7 +7,8 @@ self.props = {
 	auth: false,
 	user: '',
 	pass: '',
-	upload: false
+	upload: false,
+	lite: false
 };
 (function () {
   'use strict';
@@ -609,6 +610,10 @@ self.props = {
     return user === self.props.user && pass === self.props.pass;
   }
 
+  function encodePathComponent(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+  }
+
   async function handleRequest(request) {
     if (request.method === 'OPTIONS') // allow preflight request
       return new Response('', {
@@ -627,6 +632,43 @@ self.props = {
     request = Object.assign({}, request, new URL(request.url));
     request.pathname = request.pathname.split('/').map(decodeURIComponent).map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
     .join('/');
+
+    if (self.props.lite && request.pathname.endsWith('/')) {
+      // lite mode
+      const path = request.pathname;
+      let parent = encodePathComponent(path.split('/').slice(0, -2).join('/') + '/');
+      const {
+        files
+      } = await gd.listFolderByPath(path, self.props.default_root_id);
+      let fileht = '';
+
+      for (const f of files) {
+        const isf = f.mimeType === 'application/vnd.google-apps.folder';
+        const p = encodePathComponent(path + f.name);
+        fileht += `<li><a href="${p + (isf ? '/' : '')}">${f.name}</a></li>`;
+      }
+
+      const ht = `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<title>Index of ${path}</title>
+</head>
+<body>
+<h1>Index of ${path}</h1>
+<ul>
+<li><a href="${parent}"> Parent Directory</a></li>
+${fileht}
+</ul>
+</body>
+</html>`;
+      return new Response(ht, {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8'
+        }
+      });
+    }
+
     let resp;
     if (request.method === 'GET') resp = await onGet(request);else if (request.method === 'POST') resp = await onPost(request);else if (request.method === 'PUT') resp = await onPut(request);else resp = new Response('', {
       status: 405
