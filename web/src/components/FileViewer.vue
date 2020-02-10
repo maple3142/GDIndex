@@ -1,66 +1,64 @@
 <template>
-	<v-container fluid>
-		<portal to="left">
-			<v-toolbar-items>
-				<v-btn
-					@click="toggleMenu"
-				>
-					<v-icon color="white">
-						mdi-menu-open 
-					</v-icon>
-				</v-btn>
-			</v-toolbar-items>
-		</portal>
-		
-		<v-row  class="myright">
-			<v-col v-show="showmenu" style="min-width:50%; max-width:100%; max-height: calc(100vh - 100px);overflow: scroll;">
-				<v-card
-					class="mx-auto"
-					tile
-				>
-					<v-sheet class="pa-4 primary lighten-2">
-				        <v-text-field
-				          v-model="search"
-				          label="Поиск"
-				          dark
-				          flat
-				          solo-inverted
-				          hide-details
-				          clearable
-				          clear-icon="mdi-close-circle-outline"
-				        ></v-text-field>
-			        </v-sheet>
-			        <v-card-text>
-						<v-treeview
-					      v-model="tree"
-					      :items="items"
-					      activatable
-					      :search="searchfilter"
-					      item-key="name"
-					      open-on-click
-					      :openAll="openAll"
-					    >
-					      <template v-slot:prepend="{ item }">
-					      	<v-icon v-if="item.file === 'mdi-folder'">
-					          mdi-folder
-					        </v-icon>
-					        <v-icon v-else >
-					          {{ item.file }}
-					        </v-icon>
-					      </template>
-					      <template v-slot:label="{ item }">
-						      <a @click="goPath(item)" v-if="item.file !== 'mdi-folder'">{{ item.name }}</a>
-						      <div v-else>{{item.name}}</div>
-						  </template>
-					    </v-treeview>
-					</v-card-text>
-				</v-card>
-			</v-col>
-			<v-col style="min-width:50%; max-width:100%;max-height: calc(100vh - 100px);overflow: scroll;">
-				<iframe :src="link" width="100%" style="height: 100vh;"></iframe>
-			</v-col>
-		</v-row>
-	</v-container>
+	<v-content>
+		<v-app-bar app color="primary" dark>
+			<portal-target name="left" slim/>
+			<v-toolbar-title class="headline pointer ml-3">Baby-club - база знаний</v-toolbar-title>
+			<portal-target name="navbar" slim/>
+		</v-app-bar>
+		<v-container fluid>
+			<portal to="left">
+				<v-toolbar-items>
+					<v-btn @click="toggleMenu">
+						<v-icon color="white">mdi-menu-open </v-icon>
+					</v-btn>
+				</v-toolbar-items>
+			</portal>
+			<v-row  class="myright">
+				<v-col v-show="showmenu" style="min-width:50%; max-width:100%; max-height: calc(100vh - 100px);overflow: scroll;">
+					<v-card
+						class="mx-auto"
+						tile
+					>
+						<v-sheet class="pa-4 primary lighten-2">
+							<v-text-field
+								v-model="search"
+								label="Поиск"
+								dark
+								flat
+								solo-inverted
+								hide-details
+								clearable
+								clear-icon="mdi-close-circle-outline"
+							></v-text-field>
+						</v-sheet>
+						<v-card-text>
+							<v-treeview
+								v-model="tree"
+								:items="items"
+								activatable
+								:search="searchfilter"
+								item-key="name"
+								open-on-click
+								:openAll="openAll"
+							>
+								<template v-slot:prepend="{ item }">
+									<v-icon v-if="item.file === 'mdi-folder'">mdi-folder</v-icon>
+									<v-icon v-else>{{ item.file }}</v-icon>
+								</template>
+								<template v-slot:label="{ item }">
+									<a @click="goPath(item)" v-if="item.file !== 'mdi-folder'">{{ item.name }}</a>
+									<div v-else>{{item.name}}</div>
+								</template>
+							</v-treeview>
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col style="min-width:50%; max-width:100%;max-height: calc(100vh - 100px);overflow: scroll;">
+					<iframe :src="link" width="100%" style="height: 100vh;"></iframe>
+				</v-col>
+			</v-row>
+		</v-container>
+	</v-content>
 </template>
 <script>
 import { format } from 'date-fns'
@@ -151,9 +149,7 @@ export default {
 		  if (obj.name === 'root') {
 		  	obj.name = 'Baby-club'
 		  }
-		  //if (obj.name === '') {
-		  //	obj.name = '<без названия>'	
-		  //}
+
 		  return obj
 		},
 		recursion(obj) {
@@ -239,6 +235,9 @@ export default {
 }
 </script>
 <style scoped>
+.headline {
+	margin-right: 84px;	
+}
 .fake-tr {
 	display: table-row;
 	vertical-align: inherit;
