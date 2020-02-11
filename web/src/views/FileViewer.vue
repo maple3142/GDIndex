@@ -4,6 +4,12 @@
 			<portal-target name="left" slim/>
 			<v-toolbar-title class="headline pointer ml-3">Baby-club - база знаний</v-toolbar-title>
 			<portal-target name="navbar" slim/>
+			<v-btn
+				@click="handleClickSignOut"
+				class="sign-out"
+			>
+				Выйти
+			</v-btn>
 		</v-app-bar>
 		<v-container fluid>
 			<portal to="left">
@@ -70,6 +76,7 @@ import ImageViewer from 'viewerjs'
 import 'viewerjs/dist/viewer.css'
 
 export default {
+	name: "FileViewer",
 	data() {
 		return {
 			showmenu: true,
@@ -127,6 +134,13 @@ export default {
 		}
 	},
 	methods: {
+		handleClickSignOut() {
+			this.$gAuth
+				.signOut()
+				.then(() => {
+					this.$router.push('/');
+				})
+		},
 		toggleMenu() {
 			this.showmenu = !this.showmenu
 		},
@@ -141,83 +155,83 @@ export default {
 			}
 		},
 		checkAndChange(obj) { 
-		  if (this.icons[obj.file]) {
-		  	obj.file = this.icons[obj.file]
-		  } else {
-		  	obj.file = 'mdi-file-document'
-		  }
-		  if (obj.name === 'root') {
-		  	obj.name = 'Baby-club'
-		  }
+			if (this.icons[obj.file]) {
+				obj.file = this.icons[obj.file]
+			} else {
+				obj.file = 'mdi-file-document'
+			}
+			if (obj.name === 'root') {
+				obj.name = 'Baby-club'
+			}
 
-		  return obj
+			return obj
 		},
 		recursion(obj) {
-		   let o = obj;
-		   o = this.checkAndChange(o); 
-		   if (o.children) {
-		   		o.children.sort(function(a, b){
-		   			if (a.file == 'application/vnd.google-apps.folder') {
-		   				if (b.file == 'application/vnd.google-apps.folder') {
-		   					if (a.name < b.name) {
-		   						return -1;
-		   					} else {
-		   						return 1;
-		   					}
-		   				} else {
-		   					return -1
-		   				}
-		   			} else {
-		   				// a is file
-		   				if (b.file == 'application/vnd.google-apps.folder') {
-		   					// b is folder
-		   					return 1;
-		   				} else {
-		   					// both files
-		   					if (a.name < b.name) {
-		   						return -1;
-		   					} else {
-		   						return 1;
-		   					}
-		   				}
-		   			}
+			let o = obj;
+			o = this.checkAndChange(o); 
+			if (o.children) {
+				o.children.sort(function(a, b) {
+					if (a.file == 'application/vnd.google-apps.folder') {
+						if (b.file == 'application/vnd.google-apps.folder') {
+							if (a.name < b.name) {
+								return -1;
+							} else {
+								return 1;
+							}
+						} else {
+							return -1
+						}
+					} else {
+						// a is file
+						if (b.file == 'application/vnd.google-apps.folder') {
+							// b is folder
+							return 1;
+						} else {
+							// both files
+							if (a.name < b.name) {
+								return -1;
+							} else {
+								return 1;
+							}
+						}
+					}
 				})
-		   		o.children.forEach(v => {
-		      	this.recursion(v);
-		      });
-		   } else if (Array.isArray(o)) {
-		   		o.sort(function(a, b){
-		   			if (a.file == 'application/vnd.google-apps.folder') {
-		   				if (b.file == 'application/vnd.google-apps.folder') {
-		   					if (a.name < b.name) {
-		   						return -1;
-		   					} else {
-		   						return 1;
-		   					}
-		   				} else {
-		   					return -1
-		   				}
-		   			} else {
-		   				// a is file
-		   				if (b.file == 'application/vnd.google-apps.folder') {
-		   					// b is folder
-		   					return 1;
-		   				} else {
-		   					// both files
-		   					if (a.name < b.name) {
-		   						return -1;
-		   					} else {
-		   						return 1;
-		   					}
-		   				}
-		   			}
+				o.children.forEach(v => {
+					this.recursion(v);
+				});
+			} else if (Array.isArray(o)) {
+				o.sort(function(a, b) {
+					if (a.file == 'application/vnd.google-apps.folder') {
+						if (b.file == 'application/vnd.google-apps.folder') {
+							if (a.name < b.name) {
+								return -1;
+							} else {
+								return 1;
+							}
+						} else {
+							return -1
+						}
+					} else {
+						// a is file
+						if (b.file == 'application/vnd.google-apps.folder') {
+							// b is folder
+							return 1;
+						} else {
+							// both files
+							if (a.name < b.name) {
+								return -1;
+							} else {
+								return 1;
+							}
+						}
+					}
 				})
-		   		o.forEach(v => {
-		      	this.recursion(v);
-		      });
-		   }
-		   return o; // return final new object
-		},
+				o.forEach(v => {
+					this.recursion(v);
+				});
+			}
+			return o; // return final new object
+		}
 	},
 	created() {
 		this.loading = true
@@ -228,15 +242,27 @@ export default {
 		this.loading = false
 	},
 	mounted() {
-        window.onresize = () => {
-            this.windowWidth = window.innerWidth
-        }
-    }
+		window.onresize = () => {
+			this.windowWidth = window.innerWidth
+		}
+
+		let that = this;
+		let checkGauthLoad = setInterval(function() {
+			if (that.$gAuth.isInit) {
+				!that.$gAuth.isAuthorized ? that.$router.push('/') : '';
+				clearInterval(checkGauthLoad);
+			}
+		}, 1);
+	}
 }
 </script>
 <style scoped>
+.sign-out {
+	position: absolute;
+	right: 10px;
+}
 .headline {
-	margin-right: 84px;	
+	margin-right: 84px;
 }
 .fake-tr {
 	display: table-row;
@@ -275,7 +301,7 @@ export default {
 		flex-direction:column;
 	}
 	.myright>*{
-	    flex-basis: auto;
+		flex-basis: auto;
 	}
 }
 </style>
