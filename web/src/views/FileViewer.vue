@@ -4,12 +4,14 @@
 			<portal-target name="left" slim/>
 			<v-toolbar-title class="headline pointer ml-3">Baby-club - база знаний</v-toolbar-title>
 			<portal-target name="navbar" slim/>
-			<v-btn
-				@click="handleClickSignOut"
-				class="sign-out"
-			>
-				Выйти
-			</v-btn>
+			<div class="sign-panel">
+				<span class="sign-panel__email">{{ currentEmail }}</span>
+				<v-btn
+					@click="handleClickSignOut"
+				>
+					Выйти
+				</v-btn>
+			</div>
 		</v-app-bar>
 		<v-container fluid>
 			<portal to="left">
@@ -79,6 +81,7 @@ export default {
 	name: "FileViewer",
 	data() {
 		return {
+			currentEmail: '',
 			showmenu: true,
 			link: '',
 			tree: [],
@@ -249,7 +252,7 @@ export default {
 		let that = this;
 		let checkGauthLoad = setInterval(function() {
 			if (that.$gAuth.isInit) {
-				!that.$gAuth.isAuthorized ? that.$router.push('/') : '';
+				!that.$gAuth.isAuthorized ? that.$router.push('/') : that.currentEmail = that.$gAuth.GoogleAuth.currentUser.Ab.w3.U3;
 				clearInterval(checkGauthLoad);
 			}
 		}, 1);
@@ -257,9 +260,12 @@ export default {
 }
 </script>
 <style scoped>
-.sign-out {
+.sign-panel {
 	position: absolute;
 	right: 10px;
+}
+.sign-panel__email {
+	margin-right: 10px;
 }
 .headline {
 	margin-right: 84px;
@@ -295,6 +301,11 @@ export default {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+@media (max-width: 768px) {
+	.sign-panel__email {
+		display: none;
+	}
 }
 @media (max-width: 500px) {
 	.myright{
