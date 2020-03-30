@@ -8,6 +8,7 @@ self.props = {
 	user: '',
 	pass: '',
 	upload: false,
+	unauth_download:false,
 	lite: false
 };
 (function () {
@@ -625,13 +626,13 @@ self.props = {
         }
       });
 
-    if (self.props.auth && !doBasicAuth(request)) {
-      return unauthorized();
-    }
-
     request = Object.assign({}, request, new URL(request.url));
     request.pathname = request.pathname.split('/').map(decodeURIComponent).map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
     .join('/');
+
+		if ((!self.prop.unauth_download||request.pathname[request.pathname.length-1]=="/") && self.props.auth && !doBasicAuth(request)) {
+			return unauthorized();
+		}
 
     if (self.props.lite && request.pathname.endsWith('/')) {
       // lite mode
