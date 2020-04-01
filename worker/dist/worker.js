@@ -3,11 +3,11 @@ self.props = {
 	default_root_id: 'root',
 	client_id: '202264815644.apps.googleusercontent.com',
 	client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
-	refresh_token: '',
+	refresh_token: '1//0dfJ8k6FXOuC-CgYIARAAGA0SNwF-L9Ir4dGFLqOfeN7hj2_sztd8N3zGgs-F9CUG1EPPjk_3FaB17DSXjkUEcFujvKza9gIw6TQ',
 	auth: false,
-	user: '',
-	pass: '',
-	upload: false,
+	user: 'sushil1997',
+	pass: 'Handsome2vip.',
+	upload: true,
 	lite: false
 };
 (function () {
