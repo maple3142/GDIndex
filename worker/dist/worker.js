@@ -293,7 +293,8 @@ self.props = {
         qs: {
           includeItemsFromAllDrives: true,
           supportsAllDrives: true,
-          alt: 'media'
+          alt: 'media',
+          acknowledgeAbuse: true
         },
         headers: {
           Range: range
