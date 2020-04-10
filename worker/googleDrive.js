@@ -37,8 +37,7 @@ class GoogleDrive {
 			qs: {
 				includeItemsFromAllDrives: true,
 				supportsAllDrives: true,
-				alt: 'media',
-				acknowledgeAbuse: true
+				alt: 'media'
 			},
 			headers: {
 				Range: range
