@@ -540,6 +540,15 @@ self.props = {
   }
 
   async function onPut(request) {
+    if (!self.props.upload) {
+      return new Response("Upload isn't enabled.", {
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        status: 405
+      });
+    }
+
     let {
       pathname: path
     } = request;

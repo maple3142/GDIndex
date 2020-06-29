@@ -100,6 +100,14 @@ async function onPost(request) {
 	}
 }
 async function onPut(request) {
+	if (!self.props.upload) {
+		return new Response("Upload isn't enabled.", {
+			headers: {
+				'Content-Type': 'text/plain'
+			},
+			status: 405
+		})
+	}
 	let { pathname: path } = request
 	if (path.substr(-1) === '/') {
 		return new Response(null, {
@@ -162,10 +170,7 @@ function doBasicAuth(request) {
 	return user === self.props.user && pass === self.props.pass
 }
 function encodePathComponent(path) {
-	return path
-		.split('/')
-		.map(encodeURIComponent)
-		.join('/')
+	return path.split('/').map(encodeURIComponent).join('/')
 }
 async function handleRequest(request) {
 	if (request.method === 'OPTIONS')
@@ -192,10 +197,7 @@ async function handleRequest(request) {
 		// lite mode
 		const path = request.pathname
 		let parent = encodePathComponent(
-			path
-				.split('/')
-				.slice(0, -2)
-				.join('/') + '/'
+			path.split('/').slice(0, -2).join('/') + '/'
 		)
 		const { files } = await gd.listFolderByPath(
 			path,
