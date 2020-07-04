@@ -12,7 +12,7 @@ async function onGet(request) {
 	if (path.startsWith('/~_~_gdindex/resources/')) {
 		const remain = path.replace('/~_~_gdindex/resources/', '')
 		const r = await fetch(
-			`https://raw.githubusercontent.com/maple3142/GDIndex/master/web/dist/${remain}`
+			`https://raw.githubusercontent.com/bbvv77/GDIndex/master/web/dist/${remain}`
 		)
 		return new Response(r.body, {
 			headers: {
