@@ -37,7 +37,7 @@
 					text
 					class="text-none hidden-sm-and-down"
 					tag="a"
-					href="https://github.com/maple3142/GDIndex"
+					href="https://github.com/bbvv77/GDIndex"
 					target="_blank"
 				>
 					<v-icon>mdi-github-circle</v-icon>&nbsp;GitHub</v-btn
