@@ -20,7 +20,8 @@
 import api from '../api'
 
 const MIME = {
-	mp4: 'video/mp4'
+	mp4: 'video/mp4',
+	mkv: 'video/webm'
 }
 function checkExists(url) {
 	const ct = new AbortController()
