@@ -22,7 +22,7 @@
 
 ### 簡單、自動的方法
 
-前往 [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch.me/)(英文) 並遵照它的指示。
+前往 [https://gdindex-code-builder.maple3142.net/](https://gdindex-code-builder.maple3142.net/)(英文) 並遵照它的指示。
 
 ### 手動的方法
 

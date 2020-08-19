@@ -26,7 +26,7 @@
 
 ### Simple and automatic way
 
-Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch.me/), and follow its instructions.
+Go [https://gdindex-code-builder.maple3142.net/](https://gdindex-code-builder.maple3142.net/), and follow its instructions.
 
 ### Manual way
 
