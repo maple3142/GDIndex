@@ -193,7 +193,7 @@ async function handleRequest(request) {
 		.map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
 		.join('/')
 
-	if (self.props.lite && request.pathname.endsWith('/')) {
+	if ((self.props.lite || request.headers.get('lite') == "true") && request.pathname.endsWith('/')) {
 		// lite mode
 		const path = request.pathname
 		let parent = encodePathComponent(
