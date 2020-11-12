@@ -1,4 +1,5 @@
 import xf from './xfetch'
+import { getTokenFromGCPServiceAccount } from '@sagi.io/workers-jwt'
 
 class GoogleDrive {
 	constructor(auth) {
@@ -8,8 +9,30 @@ class GoogleDrive {
 	}
 	async initializeClient() {
 		// any method that do api call must call this beforehand
-		if (Date.now() < this.expires) return
-		const resp = await xf
+		if (Date.now() < this.expires) return;
+
+		if(this.auth.service_account && typeof(this.auth.service_account_json) != "undefined")
+		{
+			var aud = this.auth.service_account_json.token_uri;
+			var serviceAccountJSON = this.auth.service_account_json;
+			const jwttoken = await getTokenFromGCPServiceAccount({serviceAccountJSON,aud,payloadAdditions: {"scope": "https://www.googleapis.com/auth/drive"}});
+
+			var resp = await xf.post(serviceAccountJSON.token_uri, {
+				urlencoded: {
+					grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+					assertion: jwttoken,
+				}
+			}).json();
+			this.client = xf.extend({
+				baseURI: 'https://www.googleapis.com/drive/v3/',
+				headers: {
+					Authorization: `Bearer ${resp.access_token}`
+				}
+			});
+		}
+		else
+		{
+			const resp = await xf
 			.post('https://www.googleapis.com/oauth2/v4/token', {
 				urlencoded: {
 					client_id: this.auth.client_id,
@@ -19,12 +42,13 @@ class GoogleDrive {
 				}
 			})
 			.json()
-		this.client = xf.extend({
-			baseURI: 'https://www.googleapis.com/drive/v3/',
-			headers: {
-				Authorization: `Bearer ${resp.access_token}`
-			}
-		})
+			this.client = xf.extend({
+				baseURI: 'https://www.googleapis.com/drive/v3/',
+				headers: {
+					Authorization: `Bearer ${resp.access_token}`
+				}
+			})
+		}
 		this.expires = Date.now() + 3500 * 1000 // normally, it should expiers after 3600 seconds
 	}
 	async listDrive() {

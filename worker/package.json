@@ -5,10 +5,14 @@
 	"license": "MIT",
 	"dependencies": {
 		"mime": "^2.4.4",
-		"path-to-regexp": "^3.1.0"
+		"path-to-regexp": "^3.1.0",
+		"buffer": "*",
+		"@sagi.io/workers-jwt": "*"
 	},
 	"devDependencies": {
-		"bili": "^4.8.1"
+		"bili": "^4.8.1",
+		"rollup-plugin-node-builtins":"*",
+		"rollup-plugin-node-globals":"*"
 	},
 	"scripts": {
 		"build": "bili"
