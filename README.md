@@ -44,6 +44,6 @@ This mode will serve a simple nginx-like directory listing, and it only work wit
 
 On the top of the script, change `lite: false` into `lite: true`, than thats all.
 
-To enable on-the-fly lite mode, especially with command-line applications, you can include a HTTP header `lite: true` in your requests.
+To enable on-the-fly lite mode, especially with command-line applications, you can include a HTTP header `x-lite: true` in your requests.
 
 [Lite mode demo](https://gdindex-demo-lite.maple3142.workers.dev/)

@@ -194,7 +194,7 @@ async function handleRequest(request) {
 		.join('/')
 
 	if (
-		(self.props.lite || request.headers.get('lite') == 'true') &&
+		(self.props.lite || request.headers.get('x-lite') == 'true') &&
 		request.pathname.endsWith('/')
 	) {
 		// lite mode
