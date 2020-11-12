@@ -74,7 +74,8 @@ export default {
 					}
 					this.wrong = true
 				})
-				.catch((err) => console.log(err))
+				// eslint-disable-next-line no-console
+				.catch(console.error)
 		},
 	},
 }
