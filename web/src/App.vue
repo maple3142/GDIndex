@@ -46,7 +46,7 @@
 		</v-app-bar>
 
 		<v-content> <router-view /> </v-content>
-		<LoginDialog :cond="showAuthInput" />
+		<LoginDialog :show="showAuthInput" />
 	</v-app>
 </template>
 <script>

@@ -41,14 +41,20 @@
 
 export default {
 	props: {
-		cond: Boolean,
+		show: Boolean,
 	},
 	data() {
 		return {
 			user: '',
 			pass: '',
 			wrong: false,
+			cond: this.show,
 		}
+	},
+	watch: {
+		show(v) {
+			this.cond = v
+		},
 	},
 	methods: {
 		doLogin() {
