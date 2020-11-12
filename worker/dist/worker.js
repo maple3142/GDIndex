@@ -4,6 +4,8 @@
 		client_id: '202264815644.apps.googleusercontent.com',
 		client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
 		refresh_token: '',
+		service_account: false,
+		service_account_json: {},
 		auth: false,
 		user: '',
 		pass: '',
@@ -2508,14 +2510,12 @@
             "scope": "https://www.googleapis.com/auth/drive"
           }
         });
-        console.log(jwttoken);
         var resp = await xf.post(serviceAccountJSON.token_uri, {
           urlencoded: {
             grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
             assertion: jwttoken
           }
         }).json();
-        console.log(resp.access_token);
         this.client = xf.extend({
           baseURI: 'https://www.googleapis.com/drive/v3/',
           headers: {
