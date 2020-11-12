@@ -33,3 +33,10 @@
 5. 复制 [worker/dist/worker.js](worker/dist/worker.js) 的内容到 CloudFlare Workers
 6. 在脚本顶端填上 `refresh_token`, `root_folder_id` 以及其他的选项
 7. 部署!
+
+### 使用服务帐户
+
+1. 创建一个服务帐户，一个相应的服务帐户密钥，然后从[Google Cloud Platform控制台]获取JSON（https://cloud.google.com/iam/docs/creating-managing-service-account-keys）
+2. 在props对象中，将`service_account_json`值替换为服务帐户JSON文件的内容，并将`service_account`设置为`true`。
+3. 确保所涉及的服务帐户有权访问“ root_folder_id”中指定的文件夹
+4. 部署

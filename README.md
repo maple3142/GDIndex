@@ -38,6 +38,13 @@ Go [https://gdindex-code-builder.maple3142.net/](https://gdindex-code-builder.ma
 6. Fill `refresh_token`, `root_folder_id` and other options on the top of the script.
 7. Deploy!
 
+### Using service accounts
+
+1. Create a service account, a corresponding service account key, and get the JSON from the [Google Cloud Platform console](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) 
+2. In the props object, replace the `service_account_json` value with the contents of the service account JSON file and set `service_account` to `true`.
+3. Make sure that the service account in question has access to the folder specified in `root_folder_id`
+4. Deploy
+
 ## Lite mode
 
 This mode will serve a simple nginx-like directory listing, and it only work with one drive. `upload` will be ignored in this mode.
