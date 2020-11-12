@@ -2500,17 +2500,17 @@
       // any method that do api call must call this beforehand
       if (Date.now() < this.expires) return;
 
-      if (this.auth.service_account && typeof this.auth.service_account_json != "undefined") {
-        var aud = this.auth.service_account_json.token_uri;
-        var serviceAccountJSON = this.auth.service_account_json;
+      if (this.auth.service_account && typeof this.auth.service_account_json != 'undefined') {
+        const aud = this.auth.service_account_json.token_uri;
+        const serviceAccountJSON = this.auth.service_account_json;
         const jwttoken = await workersJwt_2({
           serviceAccountJSON,
           aud,
           payloadAdditions: {
-            "scope": "https://www.googleapis.com/auth/drive"
+            scope: 'https://www.googleapis.com/auth/drive'
           }
         });
-        var resp = await xf.post(serviceAccountJSON.token_uri, {
+        const resp = await xf.post(serviceAccountJSON.token_uri, {
           urlencoded: {
             grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
             assertion: jwttoken
