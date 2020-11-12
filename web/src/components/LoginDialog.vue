@@ -41,13 +41,13 @@
 
 export default {
 	props: {
-		cond: Boolean
+		cond: Boolean,
 	},
 	data() {
 		return {
 			user: '',
 			pass: '',
-			wrong: false
+			wrong: false,
 		}
 	},
 	methods: {
@@ -56,11 +56,11 @@ export default {
 			const tok = btoa(user + ':' + pass)
 			fetch(window.props.api, {
 				headers: {
-					Authorization: 'Basic ' + tok
+					Authorization: 'Basic ' + tok,
 				},
-				credentials: 'omit'
+				credentials: 'omit',
 			})
-				.then(r => {
+				.then((r) => {
 					if (r.status === 200) {
 						localStorage.token = tok
 						// eslint-disable-next-line
@@ -68,8 +68,8 @@ export default {
 					}
 					this.wrong = true
 				})
-				.catch(err => console.log(err))
-		}
-	}
+				.catch((err) => console.log(err))
+		},
+	},
 }
 </script>

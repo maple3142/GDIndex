@@ -74,7 +74,7 @@
 	</v-dialog>
 </template>
 <script>
-const isUrl = u => {
+const isUrl = (u) => {
 	try {
 		new URL(u)
 		return true
@@ -85,7 +85,7 @@ const isUrl = u => {
 export default {
 	props: {
 		value: Boolean,
-		uploadUrl: String
+		uploadUrl: String,
 	},
 	data() {
 		return {
@@ -96,7 +96,7 @@ export default {
 			uploadFromUrl: false,
 			showError: false,
 			uploading: false,
-			progress: 0
+			progress: 0,
 		}
 	},
 	computed: {
@@ -105,7 +105,7 @@ export default {
 				return this.$t('uploading')
 			}
 			return this.$t('serverProcessing')
-		}
+		},
 	},
 	watch: {
 		innerShow(v) {
@@ -125,7 +125,7 @@ export default {
 		},
 		uploadFromUrl() {
 			this.updateFileName()
-		}
+		},
 	},
 	methods: {
 		updateFileName() {
@@ -144,7 +144,7 @@ export default {
 				return
 			}
 			const xhr = new XMLHttpRequest()
-			xhr.upload.onprogress = e => {
+			xhr.upload.onprogress = (e) => {
 				if (!e.lengthComputable) return
 				this.progress = Math.round((e.loaded / e.total) * 100)
 			}
@@ -172,8 +172,8 @@ export default {
 			}
 			xhr.send(body)
 			this.uploading = true
-		}
-	}
+		},
+	},
 }
 </script>
 <style>

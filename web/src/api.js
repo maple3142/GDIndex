@@ -6,5 +6,5 @@ if (localStorage.token) {
 }
 export default xf.extend({
 	baseURI: window.props.api,
-	headers
+	headers,
 })

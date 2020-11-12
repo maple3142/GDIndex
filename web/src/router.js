@@ -11,9 +11,9 @@ const router = new VueRouter({
 		{ path: '/~viewer/epub', component: EpubViewer },
 		{ path: '/~viewer/video', component: VideoViewer },
 		{ path: '/~viewer/pdf', component: PdfViewer },
-		{ path: '/:path(.*)', component: FileViewer }
+		{ path: '/:path(.*)', component: FileViewer },
 	],
-	mode: 'history'
+	mode: 'history',
 })
 
 export default router

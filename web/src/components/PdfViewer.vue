@@ -14,8 +14,8 @@ export default {
 	computed: {
 		url() {
 			return atob(this.$route.query.urlBase64)
-		}
-	}
+		},
+	},
 }
 </script>
 <style scoped>

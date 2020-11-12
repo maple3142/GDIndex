@@ -7,9 +7,9 @@ Vue.use(Vuetify)
 
 export default new Vuetify({
 	icons: {
-		iconfont: 'mdi'
+		iconfont: 'mdi',
 	},
 	lang: {
-		t: (key, ...params) => i18n.t(key, params)
-	}
+		t: (key, ...params) => i18n.t(key, params),
+	},
 })

@@ -14,6 +14,6 @@ export default new VueI18n({
 		'zh-TW': zhTW,
 		'zh-HK': zhTW,
 		'zh-CN': zhCN,
-		zh: zhCN
-	}
+		zh: zhCN,
+	},
 })

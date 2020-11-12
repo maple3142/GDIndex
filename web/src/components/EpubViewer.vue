@@ -20,7 +20,7 @@ export default {
 			if (localStorage.token) {
 				win.XMLHttpRequest.prototype._send =
 					win.XMLHttpRequest.prototype.send
-				win.XMLHttpRequest.prototype.send = function(...args) {
+				win.XMLHttpRequest.prototype.send = function (...args) {
 					this.setRequestHeader(
 						'Authorization',
 						'Basic ' + localStorage.token
@@ -32,7 +32,7 @@ export default {
 			win.history.pushState = () => {}
 			iframe.focus()
 		}
-	}
+	},
 }
 </script>
 <style scoped>

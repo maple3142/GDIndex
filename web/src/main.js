@@ -19,5 +19,5 @@ window.app = new Vue({
 	router,
 	vuetify,
 	i18n,
-	render: h => h(App, { props: window.props })
+	render: (h) => h(App, { props: window.props }),
 }).$mount('#app')
