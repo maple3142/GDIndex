@@ -1,5 +1,5 @@
-import builtins from 'rollup-plugin-node-builtins';
-import globals from 'rollup-plugin-node-globals';
+import builtins from 'rollup-plugin-node-builtins'
+import globals from 'rollup-plugin-node-globals'
 
 module.exports = {
 	input: 'index.js',
@@ -10,8 +10,8 @@ module.exports = {
 	},
 	minify: false,
 	plugins: {
-		"node-globals": globals(),
-		"node-builtins": builtins()
+		'node-globals': globals(),
+		'node-builtins': builtins()
 	},
 	target: 'browser',
 	banner: `
@@ -30,5 +30,3 @@ module.exports = {
 		lite: false
 	};`.slice(1)
 }
-
-
