@@ -108,7 +108,7 @@ class GoogleDrive {
 				q: `'${id}' in parents and trashed = false`,
 				orderBy: 'folder,name,modifiedTime desc',
 				fields:
-					'files(id,name,mimeType,size,modifiedTime),nextPageToken',
+					'files(id,name,mimeType,size,modifiedTime,shortcutDetails),nextPageToken',
 				pageSize: 1000
 			}
 			if (pageToken) {
@@ -127,6 +127,12 @@ class GoogleDrive {
 			files.push(...resp.files)
 			pageToken = resp.nextPageToken
 		} while (pageToken)
+		files.forEach(file => {
+			if (file && file.mimeType == 'application/vnd.google-apps.shortcut') {
+			  file.id = file.shortcutDetails.targetId;
+			  file.mimeType = file.shortcutDetails.targetMimeType;
+			}
+		});
 		return { files }
 	}
 	async listFolderByPath(path, rootId = 'root') {
@@ -154,13 +160,16 @@ class GoogleDrive {
 					includeItemsFromAllDrives: true,
 					supportsAllDrives: true,
 					q: `'${parentId}' in parents and name = '${childName}'  and trashed = false`,
-					fields: 'files(id)'
+					fields: 'files(id,shortcutDetails)'
 				}
 			})
 			.json()
 			.catch(e => ({ files: [] })) // if error, make it empty
 		if (resp.files.length === 0) {
 			return null
+		}
+		if (resp.files[0].shortcutDetails){
+        	resp.files[0].id = resp.files[0].shortcutDetails.targetId;
 		}
 		this._getIdCache.has(parentId + childName)
 		return resp.files[0].id // when there are more than 1 items, simply return the first one

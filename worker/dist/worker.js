@@ -2593,7 +2593,7 @@
           supportsAllDrives: true,
           q: `'${id}' in parents and trashed = false`,
           orderBy: 'folder,name,modifiedTime desc',
-          fields: 'files(id,name,mimeType,size,modifiedTime),nextPageToken',
+          fields: 'files(id,name,mimeType,size,modifiedTime,shortcutDetails),nextPageToken',
           pageSize: 1000
         };
 
@@ -2615,6 +2615,12 @@
         pageToken = resp.nextPageToken;
       } while (pageToken);
 
+      files.forEach(file => {
+        if (file && file.mimeType == 'application/vnd.google-apps.shortcut') {
+          file.id = file.shortcutDetails.targetId;
+          file.mimeType = file.shortcutDetails.targetMimeType;
+        }
+      });
       return {
         files
       };
@@ -2650,7 +2656,7 @@
           includeItemsFromAllDrives: true,
           supportsAllDrives: true,
           q: `'${parentId}' in parents and name = '${childName}'  and trashed = false`,
-          fields: 'files(id)'
+          fields: 'files(id,shortcutDetails)'
         }
       }).json().catch(e => ({
         files: []
@@ -2658,6 +2664,10 @@
 
       if (resp.files.length === 0) {
         return null;
+      }
+
+      if (resp.files[0].shortcutDetails) {
+        resp.files[0].id = resp.files[0].shortcutDetails.targetId;
       }
 
       this._getIdCache.has(parentId + childName);
