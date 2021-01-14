@@ -14,18 +14,18 @@ export default (() => {
 	class XResponsePromise extends Promise {}
 	for (const alias of ['arrayBuffer', 'blob', 'formData', 'json', 'text']) {
 		// alias for .json() .text() etc...
-		XResponsePromise.prototype[alias] = function(fn) {
-			return this.then(res => res[alias]()).then(fn || (x => x))
+		XResponsePromise.prototype[alias] = function (fn) {
+			return this.then((res) => res[alias]()).then(fn || ((x) => x))
 		}
 	}
 	function mergeDeep(target, source) {
-		const isObject = obj => obj && typeof obj === 'object'
+		const isObject = (obj) => obj && typeof obj === 'object'
 
 		if (!isObject(target) || !isObject(source)) {
 			return source
 		}
 
-		Object.keys(source).forEach(key => {
+		Object.keys(source).forEach((key) => {
 			const targetValue = target[key]
 			const sourceValue = source[key]
 
@@ -44,25 +44,25 @@ export default (() => {
 		return target
 	}
 	const { assign } = Object
-	const fromEntries = ent =>
+	const fromEntries = (ent) =>
 		ent.reduce((acc, [k, v]) => ((acc[k] = v), acc), {})
-	const typeis = (...types) => val =>
-		types.some(type =>
+	const typeis = (...types) => (val) =>
+		types.some((type) =>
 			typeof type === 'string' ? typeof val === type : val instanceof type
 		)
 	const isstr = typeis('string')
 	const isobj = typeis('object')
-	const isstrorobj = v => isstr(v) || isobj(v)
-	const responseErrorThrower = res => {
+	const isstrorobj = (v) => isstr(v) || isobj(v)
+	const responseErrorThrower = (res) => {
 		if (!res.ok) throw new HTTPError(res)
 		return res
 	}
 	const extend = (defaultInit = {}) => {
 		const xfetch = (input, init = {}) => {
 			mergeDeep(init, defaultInit)
-			const createQueryString = o =>
+			const createQueryString = (o) =>
 				new init.URLSearchParams(o).toString()
-			const parseQueryString = s =>
+			const parseQueryString = (s) =>
 				fromEntries([...new init.URLSearchParams(s).entries()])
 			const url = new init.URL(input, init.baseURI || undefined)
 			if (!init.headers) {
@@ -117,7 +117,7 @@ export default (() => {
 			}
 		}
 		// Extra methods and classes
-		xfetch.extend = newDefaultInit =>
+		xfetch.extend = (newDefaultInit) =>
 			extend(assign({}, defaultInit, newDefaultInit))
 		xfetch.HTTPError = HTTPError
 		return xfetch
@@ -132,7 +132,7 @@ export default (() => {
 				URLSearchParams,
 				Headers,
 				FormData,
-				baseURI: isWindow ? document.baseURI : '' // since there is no document in webworkers
+				baseURI: isWindow ? document.baseURI : '', // since there is no document in webworkers
 		  })
 		: extend()
 })()

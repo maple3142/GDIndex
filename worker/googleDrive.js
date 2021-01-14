@@ -1,4 +1,5 @@
 import xf from './xfetch'
+import { getTokenFromGCPServiceAccount } from '@sagi.io/workers-jwt'
 
 class GoogleDrive {
 	constructor(auth) {
@@ -9,22 +10,54 @@ class GoogleDrive {
 	async initializeClient() {
 		// any method that do api call must call this beforehand
 		if (Date.now() < this.expires) return
-		const resp = await xf
-			.post('https://www.googleapis.com/oauth2/v4/token', {
-				urlencoded: {
-					client_id: this.auth.client_id,
-					client_secret: this.auth.client_secret,
-					refresh_token: this.auth.refresh_token,
-					grant_type: 'refresh_token'
+
+		if (
+			this.auth.service_account &&
+			typeof this.auth.service_account_json != 'undefined'
+		) {
+			const aud = this.auth.service_account_json.token_uri
+			const serviceAccountJSON = this.auth.service_account_json
+			const jwttoken = await getTokenFromGCPServiceAccount({
+				serviceAccountJSON,
+				aud,
+				payloadAdditions: {
+					scope: 'https://www.googleapis.com/auth/drive'
 				}
 			})
-			.json()
-		this.client = xf.extend({
-			baseURI: 'https://www.googleapis.com/drive/v3/',
-			headers: {
-				Authorization: `Bearer ${resp.access_token}`
-			}
-		})
+
+			const resp = await xf
+				.post(serviceAccountJSON.token_uri, {
+					urlencoded: {
+						grant_type:
+							'urn:ietf:params:oauth:grant-type:jwt-bearer',
+						assertion: jwttoken
+					}
+				})
+				.json()
+			this.client = xf.extend({
+				baseURI: 'https://www.googleapis.com/drive/v3/',
+				headers: {
+					Authorization: `Bearer ${resp.access_token}`
+				}
+			})
+		} else {
+			const resp = await xf
+				.post('https://www.googleapis.com/oauth2/v4/token', {
+					urlencoded: {
+						client_id: this.auth.client_id,
+						client_secret: this.auth.client_secret,
+						refresh_token: this.auth.refresh_token,
+						grant_type: 'refresh_token'
+					}
+				})
+				.json()
+			this.client = xf.extend({
+				baseURI: 'https://www.googleapis.com/drive/v3/',
+				headers: {
+					Authorization: `Bearer ${resp.access_token}`
+				}
+			})
+		}
 		this.expires = Date.now() + 3500 * 1000 // normally, it should expiers after 3600 seconds
 	}
 	async listDrive() {

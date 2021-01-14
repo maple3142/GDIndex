@@ -46,7 +46,7 @@
 		</v-app-bar>
 
 		<v-content> <router-view /> </v-content>
-		<LoginDialog :cond="showAuthInput" />
+		<LoginDialog :show="showAuthInput" />
 	</v-app>
 </template>
 <script>
@@ -55,20 +55,20 @@ import LoginDialog from './components/LoginDialog.vue'
 
 export default {
 	props: {
-		title: String
+		title: String,
 	},
 	data() {
 		return {
 			drives: [],
 			value: {},
-			showAuthInput: false
+			showAuthInput: false,
 		}
 	},
 	computed: {
 		currentDrive() {
 			const id = this.$route.query.rootId || window.props.default_root_id
-			return this.drives.find(d => d.value === id)
-		}
+			return this.drives.find((d) => d.value === id)
+		},
 	},
 	async created() {
 		const ok =
@@ -76,7 +76,7 @@ export default {
 			(await api
 				.get(window.props.api)
 				.then(() => true)
-				.catch(err => {
+				.catch((err) => {
 					if (err.response.status === 401) {
 						this.showAuthInput = true
 						return false
@@ -86,9 +86,9 @@ export default {
 
 		const { drives } = await api.get('/~_~_gdindex/drives').json()
 		this.drives = [{ text: this.$t('mainDrive'), value: 'root' }].concat(
-			drives.map(d => ({
+			drives.map((d) => ({
 				value: d.id,
-				text: d.name
+				text: d.name,
 			}))
 		)
 	},
@@ -104,8 +104,8 @@ export default {
 				return // vue-router forbid going to same location
 			}
 			this.$router.push({ path: '/', query: { rootId } })
-		}
+		},
 	},
-	components: { LoginDialog }
+	components: { LoginDialog },
 }
 </script>

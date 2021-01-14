@@ -26,7 +26,7 @@
 
 ### Simple and automatic way
 
-Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch.me/), and follow its instructions.
+Go [https://gdindex-code-builder.maple3142.net/](https://gdindex-code-builder.maple3142.net/), and follow its instructions.
 
 ### Manual way
 
@@ -38,10 +38,19 @@ Go [https://gdindex-code-builder.glitch.me/](https://gdindex-code-builder.glitch
 6. Fill `refresh_token`, `root_folder_id` and other options on the top of the script.
 7. Deploy!
 
+### Using service accounts
+
+1. Create a service account, a corresponding service account key, and get the JSON from the [Google Cloud Platform console](https://cloud.google.com/iam/docs/creating-managing-service-account-keys) 
+2. In the props object, replace the `service_account_json` value with the contents of the service account JSON file and set `service_account` to `true`.
+3. Make sure that the service account in question has access to the folder specified in `root_folder_id`
+4. Deploy
+
 ## Lite mode
 
 This mode will serve a simple nginx-like directory listing, and it only work with one drive. `upload` will be ignored in this mode.
 
 On the top of the script, change `lite: false` into `lite: true`, than thats all.
+
+To enable on-the-fly lite mode, especially with command-line applications, you can include a HTTP header `x-lite: true` in your requests.
 
 [Lite mode demo](https://gdindex-demo-lite.maple3142.workers.dev/)

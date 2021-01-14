@@ -14,5 +14,5 @@ export default {
 	serverProcessing: '服务器正在处理文件',
 	bigFileUploadWarning:
 		'由于 CloudFlare Workers 的限制，上传大档案可能会随机失败',
-	$vuetify
+	$vuetify,
 }

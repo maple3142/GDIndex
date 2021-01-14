@@ -4,11 +4,15 @@
 	"main": "index.js",
 	"license": "MIT",
 	"dependencies": {
-		"mime": "^2.4.4",
-		"path-to-regexp": "^3.1.0"
+		"@sagi.io/workers-jwt": "^0.0.10",
+		"buffer": "^6.0.2",
+		"mime": "^2.4.6",
+		"path-to-regexp": "^6.2.0"
 	},
 	"devDependencies": {
-		"bili": "^4.8.1"
+		"bili": "<5",
+		"rollup-plugin-node-builtins": "^2.1.2",
+		"rollup-plugin-node-globals": "^1.4.0"
 	},
 	"scripts": {
 		"build": "bili"

@@ -41,14 +41,20 @@
 
 export default {
 	props: {
-		cond: Boolean
+		show: Boolean,
 	},
 	data() {
 		return {
 			user: '',
 			pass: '',
-			wrong: false
+			wrong: false,
+			cond: this.show,
 		}
+	},
+	watch: {
+		show(v) {
+			this.cond = v
+		},
 	},
 	methods: {
 		doLogin() {
@@ -56,11 +62,11 @@ export default {
 			const tok = btoa(user + ':' + pass)
 			fetch(window.props.api, {
 				headers: {
-					Authorization: 'Basic ' + tok
+					Authorization: 'Basic ' + tok,
 				},
-				credentials: 'omit'
+				credentials: 'omit',
 			})
-				.then(r => {
+				.then((r) => {
 					if (r.status === 200) {
 						localStorage.token = tok
 						// eslint-disable-next-line
@@ -68,8 +74,9 @@ export default {
 					}
 					this.wrong = true
 				})
-				.catch(err => console.log(err))
-		}
-	}
+				// eslint-disable-next-line no-console
+				.catch(console.error)
+		},
+	},
 }
 </script>

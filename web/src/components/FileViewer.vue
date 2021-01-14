@@ -93,7 +93,7 @@ const SUPPORTED_TYPES = {
 	'image/jpeg': 'image',
 	'image/gif': 'image',
 	'image/bmp': 'image',
-	'application/pdf': 'pdf'
+	'application/pdf': 'pdf',
 }
 const ICON_NAME = {
 	'application/vnd.google-apps.folder': 'mdi-folder',
@@ -127,7 +127,7 @@ const ICON_NAME = {
 	'application/vnd.google-apps.document': 'mdi-file-document-box',
 	'application/vnd.google-apps.spreadsheet': 'mdi-google-spreadsheet',
 	'application/vnd.google-apps.presentation': 'mdi-file-presentation-box',
-	'text/plain': 'mdi-file-document'
+	'text/plain': 'mdi-file-document',
 }
 export default {
 	data() {
@@ -138,24 +138,24 @@ export default {
 				{
 					text: this.$t('fileName'),
 					value: 'fileName',
-					class: ['fileName']
+					class: ['fileName'],
 				},
 				{
 					text: this.$t('modifiedTime'),
 					value: 'modifiedTime',
 					filterable: false,
-					class: 'hidden-sm-and-down'
+					class: 'hidden-sm-and-down',
 				},
 				{
 					text: this.$t('fileSize'),
 					value: 'fileSize',
 					filterable: false,
-					class: 'hidden-sm-and-down'
-				}
+					class: 'hidden-sm-and-down',
+				},
 			],
 			renderStart: null,
 			uploadEnabled: window.props.upload,
-			showUploadDialog: false
+			showUploadDialog: false,
 		}
 	},
 	computed: {
@@ -171,7 +171,7 @@ export default {
 			for (let i = 0; i < list.length; i++) {
 				ar.push({
 					name: list[i],
-					path: '/' + nodePath.join(...list.slice(0, i + 1)) + '/'
+					path: '/' + nodePath.join(...list.slice(0, i + 1)) + '/',
 				})
 			}
 			return ar
@@ -183,12 +183,12 @@ export default {
 				this.$route.query.rootId || window.props.default_root_id
 			)
 			return u.href
-		}
+		},
 	},
 	methods: {
 		goPath(path, opener) {
 			const query = {
-				rootId: this.$route.query.rootId
+				rootId: this.$route.query.rootId,
 			}
 			if (opener) {
 				query.opener = opener
@@ -199,17 +199,14 @@ export default {
 					.map(decodeURIComponent)
 					.map(encodeURIComponent)
 					.join('/'),
-				query
+				query,
 			})
 		},
 		getFileUrl(path) {
 			const { rootId } = this.$route.query
 			let u = nodeUrl.resolve(
 				window.props.api,
-				path
-					.split('/')
-					.map(encodeURIComponent)
-					.join('/')
+				path.split('/').map(encodeURIComponent).join('/')
 			)
 			if (rootId) {
 				u += '?rootId=' + rootId
@@ -227,15 +224,15 @@ export default {
 				.post(path, {
 					method: 'POST',
 					qs: {
-						rootId
-					}
+						rootId,
+					},
 				})
 				.json()
 			if (renderStart !== this.renderStart) {
 				// User had initiated other folder navigation request
 				return
 			}
-			this.list = files.map(f => {
+			this.list = files.map((f) => {
 				f.mimeType = f.mimeType.replace('; charset=utf-8', '')
 				const isFolder =
 					f.mimeType === 'application/vnd.google-apps.folder'
@@ -253,7 +250,7 @@ export default {
 					mimeType: f.mimeType,
 					fileSize: f.size ? prettyBytes(parseInt(f.size)) : '',
 					resourcePath,
-					icon: ICON_NAME[f.mimeType] || 'mdi-file'
+					icon: ICON_NAME[f.mimeType] || 'mdi-file',
 				}
 				if (f.mimeType in SUPPORTED_TYPES) {
 					o.opener = SUPPORTED_TYPES[f.mimeType]
@@ -294,7 +291,7 @@ export default {
 					}
 					this.$router.push({
 						path: '/~viewer/' + query.opener,
-						query: { urlBase64: btoa(u) }
+						query: { urlBase64: btoa(u) },
 					})
 				} else {
 					location.href = u
@@ -304,7 +301,7 @@ export default {
 		uploadComplete() {
 			this.showUploadDialog = false
 			this.renderPath(this.path, this.$route.query.rootId)
-		}
+		},
 	},
 	created() {
 		this.handlePath(this.path, this.$route.query)
@@ -320,8 +317,8 @@ export default {
 		}
 	},
 	components: {
-		FileUploadDialog
-	}
+		FileUploadDialog,
+	},
 }
 </script>
 <style scoped>

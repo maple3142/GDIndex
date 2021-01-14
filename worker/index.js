@@ -100,6 +100,14 @@ async function onPost(request) {
 	}
 }
 async function onPut(request) {
+	if (!self.props.upload) {
+		return new Response("Upload isn't enabled.", {
+			headers: {
+				'Content-Type': 'text/plain'
+			},
+			status: 405
+		})
+	}
 	let { pathname: path } = request
 	if (path.substr(-1) === '/') {
 		return new Response(null, {
@@ -162,10 +170,7 @@ function doBasicAuth(request) {
 	return user === self.props.user && pass === self.props.pass
 }
 function encodePathComponent(path) {
-	return path
-		.split('/')
-		.map(encodeURIComponent)
-		.join('/')
+	return path.split('/').map(encodeURIComponent).join('/')
 }
 async function handleRequest(request) {
 	if (request.method === 'OPTIONS')
@@ -188,14 +193,14 @@ async function handleRequest(request) {
 		.map(decodeURIComponent) // for some super special cases, browser will force encode it...   eg: +αあるふぁきゅん。 - +♂.mp3
 		.join('/')
 
-	if (self.props.lite && request.pathname.endsWith('/')) {
+	if (
+		(self.props.lite || request.headers.get('x-lite') == 'true') &&
+		request.pathname.endsWith('/')
+	) {
 		// lite mode
 		const path = request.pathname
 		let parent = encodePathComponent(
-			path
-				.split('/')
-				.slice(0, -2)
-				.join('/') + '/'
+			path.split('/').slice(0, -2).join('/') + '/'
 		)
 		const { files } = await gd.listFolderByPath(
 			path,
@@ -253,7 +258,7 @@ addEventListener('fetch', event => {
 	event.respondWith(
 		handleRequest(event.request).catch(err => {
 			console.error(err)
-			new Response(JSON.stringify(err.stack), {
+			return new Response(JSON.stringify(err.stack), {
 				status: 500,
 				headers: {
 					'Content-Type': 'application/json'

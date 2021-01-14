@@ -11,5 +11,5 @@ export default {
 	uploading: 'Uploading...',
 	serverProcessing: 'Server is processing the file now',
 	bigFileUploadWarning:
-		"Due to CloudFlare Workers' limitation, uploading bigfiles may randomly failed."
+		"Due to CloudFlare Workers' limitation, uploading bigfiles may randomly failed.",
 }

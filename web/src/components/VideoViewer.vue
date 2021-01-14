@@ -20,21 +20,21 @@
 import api from '../api'
 
 const MIME = {
-	mp4: 'video/mp4'
+	mp4: 'video/mp4',
 }
 function checkExists(url) {
 	const ct = new AbortController()
 	return api
 		.get(url, {
-			signal: ct.signal
+			signal: ct.signal,
 		})
-		.then(r => {
+		.then((r) => {
 			ct.abort()
 			return r.status === 200
 		})
 		.catch(() => false)
 }
-const srt2vtt = s =>
+const srt2vtt = (s) =>
 	'WEBVTT FILE\r\n\r\n' +
 	s
 		.replace(/\{\\([ibu])\}/g, '</$1>')
@@ -68,7 +68,7 @@ export default {
 	beforeDestroy() {
 		const { video } = this.$refs
 		video && video.stop && video.stop()
-	}
+	},
 }
 </script>
 <style scoped>
