@@ -3,13 +3,13 @@
 		default_root_id: 'root',
 		client_id: '202264815644.apps.googleusercontent.com',
 		client_secret: 'X4Z3ca8xfWDb1Voo-F9a7ZxJ',
-		refresh_token: '',
+		refresh_token: '1//04p8ioUQHOHJWCgYIARAAGAQSNwF-L9IrTz1OgRRurotvFmia1CK9IR5pGBz8BhiJbK4K91-vo4-w6rOPNVaqNaRGaBXDbExxuWU',
 		service_account: false,
 		service_account_json: {},
 		auth: false,
 		user: '',
 		pass: '',
-		upload: false,
+		upload: true,
 		lite: false
 	};
 (function () {
